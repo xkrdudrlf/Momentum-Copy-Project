@@ -1,0 +1,22 @@
+{
+  "name": "momentum",
+  "version": "1.0.0",
+  "description": "Momentum copy project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xkrdudrlf/Momentum-Copy-Project.git"
+  },
+  "author": "Tom Tak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xkrdudrlf/Momentum-Copy-Project/issues"
+  },
+  "homepage": "https://github.com/xkrdudrlf/Momentum-Copy-Project#readme",
+  "devDependencies": {
+    "sass": "^1.43.2"
+  }
+}

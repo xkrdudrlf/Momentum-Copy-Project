@@ -1,0 +1,2 @@
+1. HTML Structure for the page.
+2. CSS for the page.

@@ -1,0 +1,240 @@
+.header {
+  display: flex;
+  height: 60px;
+  width: 100%;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+
+  .header-links {
+    height: 100%;
+    padding: $header-padding;
+    font-size: 1.2rem;
+  }
+
+  .header-search {
+    display: flex;
+    height: 100%;
+    width: 280px;
+    position: relative;
+    cursor: pointer;
+
+    &::after {
+      content: "";
+      display: none;
+      position: absolute;
+      bottom: 8px;
+      height: 2px;
+      width: 100%;
+      background-color: white;
+    }
+
+    &-left {
+      height: 100%;
+      padding: $header-padding 10px $header-padding 0;
+      cursor: inherit;
+    }
+
+    &-center {
+      flex: 1;
+      height: 100%;
+      padding: $header-padding 0;
+      .header-search-input {
+        width: 100%;
+        background: none;
+        border: none;
+        outline-style: none;
+        font-size: 1.2rem;
+        cursor: inherit;
+      }
+    }
+
+    &-right {
+      display: flex;
+      padding: $header-padding 0;
+      position: relative;
+
+      .search-engine {
+        padding: 0 10px;
+      }
+
+      .search-engine-dropdown {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 10px;
+        position: absolute;
+        left: 0;
+        bottom: -140px;
+        height: 130px;
+        width: 140px;
+        border-radius: 5px;
+        background-color: black;
+        opacity: $drop-down-opacity;
+
+        &::before {
+          @include arrow-up(left, top, 20px, -10px);
+        }
+
+        header {
+          font-size: 0.7rem;
+          color: rgb(189, 184, 184);
+          padding: 5px 0 13px 0;
+        }
+
+        ul {
+          font-size: 1rem;
+          padding-bottom: 7px;
+          img {
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.header-right {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  .weather-box-current {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px 5px 20px;
+
+    .temperature {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      height: 100%;
+      font-size: 1.5rem;
+      text-align: center;
+
+      i {
+        font-size: 1.2rem;
+        position: absolute;
+        right: 50px;
+      }
+    }
+    .location {
+      height: 100%;
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+  .weather-box-weekly {
+    &-dropdown {
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 75px;
+      right: 15px;
+      height: 245px;
+      width: 440px;
+      border-radius: 5px;
+      opacity: 0.85;
+
+      &::before {
+        @include arrow-up(right, top, 20px, -10px);
+      }
+    }
+    &-top {
+      display: flex;
+      padding: 15px 15px 0 15px;
+
+      &-left {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        .region {
+          font-size: 1.3rem;
+          margin-bottom: 4px;
+          color: white;
+        }
+        .weather {
+          font-size: 1rem;
+          color: rgb(189, 184, 184);
+        }
+      }
+
+      &-right {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        flex: 1;
+        i {
+          font-size: 0.9rem;
+          color: rgb(189, 184, 184);
+          margin-right: 10px;
+          margin-bottom: 15px;
+        }
+      }
+    }
+
+    &-mid {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 0 15px;
+
+      .current-weather {
+        display: flex;
+        flex: 1;
+
+        .weather-icon {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          width: 60px;
+          font-size: 1.8rem;
+        }
+
+        .temperature {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          font-size: 3.5rem;
+        }
+      }
+
+      .weekly-weather {
+        display: flex;
+        justify-content: space-around;
+        flex: 1;
+        border: 1.5px rgba(189, 184, 184, 0.226) solid;
+        border-left: none;
+        border-right: none;
+        &-item {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          padding: 6px 0;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    &-bot {
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      height: 40px;
+      width: 100%;
+      padding: 0 20px;
+      span {
+        font-size: 0.8rem;
+        margin-right: 7px;
+      }
+    }
+  }
+}

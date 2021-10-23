@@ -1,0 +1,16 @@
+// Variables
+$bg-image: url("https://source.unsplash.com/1600x900/daily/?landscape");
+
+$header-padding: 20px;
+$drop-down-opacity: 0.85;
+
+@mixin arrow-up($dir1, $dir2, $dir1-value, $dir2-value) {
+  content: "";
+  position: absolute;
+  #{$dir1}: $dir1-value;
+  #{$dir2}: $dir2-value;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid black;
+  opacity: $drop-down-opacity;
+}

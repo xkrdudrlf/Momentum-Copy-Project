@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./src/scss/main.scss" />
+    <title>Momentum</title>
+  </head>
+  <body>
+    <div class="body-container">
+      <header class="header">
+        <div class="header-left">
+          <div class="header-links">Links</div>
+          <div class="header-search">
+            <div class="header-search-left">
+              <i class="fas fa-search"></i>
+            </div>
+            <div class="header-search-center">
+              <form class="header-search-form">
+                <input class="header-search-input" type="text" />
+              </form>
+            </div>
+            <div class="header-search-right hidden">
+              <div class="search-engine">
+                <img
+                  src="./src/img/google.svg"
+                  alt="bing-icon"
+                  height="16"
+                  width="16"
+                />
+              </div>
+              <i class="fas fa-caret-down"></i>
+              <div class="search-engine-dropdown hidden">
+                <header>SEARCH WITH</header>
+                <ul>
+                  <img
+                    src="./src/img/google.svg"
+                    alt="bing-icon"
+                    height="15"
+                    width="15"
+                  />
+                  Google
+                </ul>
+                <ul>
+                  <img
+                    src="./src/img/bing.svg"
+                    alt="bing-icon"
+                    height="15"
+                    width="15"
+                  />
+                  Bing
+                </ul>
+                <ul>
+                  <img
+                    src="./src/img/duckduckgo.svg"
+                    alt="duckduckgo-icon"
+                    height="15"
+                    width="15"
+                  />
+                  DuckDuckGo
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="weather-box-current">
+            <span class="temperature">
+              <i class="far fa-moon"></i>
+              12°
+            </span>
+            <span class="location">Jung-gu</span>
+          </div>
+          <div class="weather-box-weekly-dropdown hidden">
+            <div class="weather-box-weekly-top">
+              <div class="weather-box-weekly-top-left">
+                <span class="region">Jung-gu</span>
+                <span class="weather">Mostly clear</span>
+              </div>
+              <div class="weather-box-weekly-top-right">
+                <i class="fas fa-ellipsis-h"></i>
+              </div>
+            </div>
+            <div class="weather-box-weekly-mid">
+              <div class="current-weather">
+                <div class="weather-icon">
+                  <i class="far fa-moon"></i>
+                </div>
+                <div class="temperature">12°</div>
+              </div>
+              <div class="weekly-weather">
+                <div class="weekly-weather-item">
+                  <span>FRI</span>
+                  <i class="far fa-moon"></i>
+                  <div><span>18°</span><span>12°</span></div>
+                </div>
+                <div class="weekly-weather-item">
+                  <span>SAT</span>
+                  <i class="far fa-moon"></i>
+                  <div><span>18°</span><span>12°</span></div>
+                </div>
+                <div class="weekly-weather-item">
+                  <span>SUN</span>
+                  <i class="far fa-moon"></i>
+                  <div><span>18°</span><span>12°</span></div>
+                </div>
+                <div class="weekly-weather-item">
+                  <span>MON</span>
+                  <i class="fas fa-cloud-sun"></i>
+                  <div><span>18°</span><span>12°</span></div>
+                </div>
+                <div class="weekly-weather-item">
+                  <span>TUE</span>
+                  <i class="far fa-moon"></i>
+                  <div><span>18°</span><span>12°</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="weather-box-weekly-bot">
+              <span>OpenWeather More weather</span>
+              <i class="fas fa-long-arrow-alt-right"></i>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main class="main">
+        <div class="main-top"></div>
+        <div class="main-mid">
+          <div class="time">12:09</div>
+          <div class="greeting-message">Good afternoon, 천재.</div>
+        </div>
+        <div class="main-bot">
+          <div class="main-focus">
+            <span class="main-focus-heading"
+              >What is your main focus for today?</span
+            >
+            <form>
+              <input type="text" name="main-focus" id="main-focus-input" />
+            </form>
+          </div>
+        </div>
+      </main>
+      <footer class="footer">
+        <div class="footer-left"></div>
+        <div class="footer-center">
+          <div class="quote">
+            "It doesn't matter who you are, where you come from. The ability to
+            triumph begins with you, Always."
+          </div>
+          <div class="quote-writer hidden">Ophra Winfrey</div>
+        </div>
+        <div class="footer-right">Todo</div>
+      </footer>
+    </div>
+    <script src="./src/js/main.js"></script>
+  </body>
+</html>
