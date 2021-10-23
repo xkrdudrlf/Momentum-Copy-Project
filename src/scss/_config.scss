@@ -3,7 +3,13 @@ $bg-image: url("https://source.unsplash.com/1600x900/daily/?landscape");
 
 $header-padding: 20px;
 $drop-down-opacity: 0.85;
+$std-transition: 0.2s ease-in;
 
+:export {
+  dropDownOpacity: $drop-down-opacity;
+}
+
+// Mixin
 @mixin arrow-up($dir1, $dir2, $dir1-value, $dir2-value) {
   content: "";
   position: absolute;

@@ -20,6 +20,7 @@
         <div class="header-left">
           <div class="header-links">Links</div>
           <div class="header-search">
+            <div class="header-search-underline"></div>
             <div class="header-search-left">
               <i class="fas fa-search"></i>
             </div>
@@ -28,24 +29,26 @@
                 <input class="header-search-input" type="text" />
               </form>
             </div>
-            <div class="header-search-right hidden">
+            <div class="header-search-right">
               <div class="search-engine">
                 <img
                   src="./src/img/google.svg"
-                  alt="bing-icon"
+                  alt="search-engine-icon"
                   height="16"
                   width="16"
+                  data-engine-name="google"
                 />
+                <i class="fas fa-caret-down"></i>
               </div>
-              <i class="fas fa-caret-down"></i>
-              <div class="search-engine-dropdown hidden">
+              <div class="search-engine-dropdown">
                 <header>SEARCH WITH</header>
                 <ul>
                   <img
                     src="./src/img/google.svg"
-                    alt="bing-icon"
+                    alt="google-icon"
                     height="15"
                     width="15"
+                    data-engine-name="google"
                   />
                   Google
                 </ul>
@@ -55,6 +58,7 @@
                     alt="bing-icon"
                     height="15"
                     width="15"
+                    data-engine-name="bing"
                   />
                   Bing
                 </ul>
@@ -64,6 +68,7 @@
                     alt="duckduckgo-icon"
                     height="15"
                     width="15"
+                    data-engine-name="duckduckgo"
                   />
                   DuckDuckGo
                 </ul>

@@ -22,14 +22,14 @@
     position: relative;
     cursor: pointer;
 
-    &::after {
-      content: "";
-      display: none;
+    &-underline {
       position: absolute;
       bottom: 8px;
       height: 2px;
       width: 100%;
       background-color: white;
+      opacity: 0;
+      transition: $std-transition;
     }
 
     &-left {
@@ -56,24 +56,29 @@
       display: flex;
       padding: $header-padding 0;
       position: relative;
+      opacity: 0;
+      transition: $std-transition;
 
       .search-engine {
         padding: 0 10px;
+        i {
+          padding-left: 5px;
+        }
       }
 
       .search-engine-dropdown {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        padding-left: 10px;
+        justify-content: space-around;
         position: absolute;
         left: 0;
         bottom: -140px;
         height: 130px;
         width: 140px;
         border-radius: 5px;
+        padding: 15px 0;
         background-color: black;
-        opacity: $drop-down-opacity;
+        opacity: 0;
 
         &::before {
           @include arrow-up(left, top, 20px, -10px);
@@ -82,14 +87,22 @@
         header {
           font-size: 0.7rem;
           color: rgb(189, 184, 184);
-          padding: 5px 0 13px 0;
+          padding-left: 10px;
         }
 
         ul {
+          display: flex;
+          flex: 1;
+          align-items: center;
           font-size: 1rem;
-          padding-bottom: 7px;
+          padding-left: 10px;
+
+          &:hover {
+            background-color: grey;
+          }
+
           img {
-            margin-right: 5px;
+            margin-right: 12px;
           }
         }
       }
