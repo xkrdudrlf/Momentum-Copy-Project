@@ -1,7 +1,12 @@
+import images from "../../img/*.svg";
+
 class HeaderSearchView {
   _parentElement = document.querySelector(".header-search");
+  _data;
 
-  render() {
+  render(data = null) {
+    this._data = data;
+
     const markup = this._generateMarkup();
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
@@ -131,10 +136,10 @@ class HeaderSearchView {
       <div class="header-search-right">
         <div class="search-engine">
           <img
-            src="./google.66008129.svg"
-            alt="search-engine-icon"
-            height="16"
-            width="16"
+            src=${images["google"]}
+            alt="google-icon"
+            height="15"
+            width="15"
             data-engine-name="google"
           />
           <i class="fas fa-caret-down"></i>
@@ -143,7 +148,7 @@ class HeaderSearchView {
           <header>SEARCH WITH</header>
           <ul>
             <img
-              src="./google.66008129.svg"
+              src=${images["google"]}
               alt="google-icon"
               height="15"
               width="15"
@@ -153,7 +158,7 @@ class HeaderSearchView {
           </ul>
           <ul>
             <img
-              src="./bing.76ffdf19.svg"
+              src=${images["bing"]}
               alt="bing-icon"
               height="15"
               width="15"
@@ -163,7 +168,7 @@ class HeaderSearchView {
           </ul>
           <ul>
             <img
-              src="./duckduckgo.03d4bac2.svg"
+              src=${images["duckduckgo"]}
               alt="duckduckgo-icon"
               height="15"
               width="15"
