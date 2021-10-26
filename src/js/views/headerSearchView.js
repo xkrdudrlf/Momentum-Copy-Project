@@ -1,15 +1,8 @@
 import images from "../../img/*.svg";
+import View from "./View";
 
-class HeaderSearchView {
+class HeaderSearchView extends View {
   _parentElement = document.querySelector(".header-search");
-  _data;
-
-  render(data = null) {
-    this._data = data;
-
-    const markup = this._generateMarkup();
-    this._parentElement.insertAdjacentHTML("afterbegin", markup);
-  }
 
   addHandlerSearchOpacity(handler) {
     this._parentElement.addEventListener("mouseenter", () => {

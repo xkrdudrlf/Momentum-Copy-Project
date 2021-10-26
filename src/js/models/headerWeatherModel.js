@@ -7,6 +7,7 @@ export const state = {
     latitude: 0,
     longitude: 0,
   },
+  tempUnit: "metric",
   weather: {
     current: {
       day: null,
@@ -23,6 +24,7 @@ export const state = {
       },
     ],
   },
+  weeklyWeatherDropdownDisplay: "none",
 };
 
 const getCurrentLocation = function () {
@@ -47,7 +49,7 @@ export const getCurrentWeatherData = async function () {
   await getCurrentLocation();
 
   const res = await fetch(
-    `${config.OPENWEATHER_WEATHER_ADDR}?lat=${state.coords.latitude}&lon=${state.coords.longitude}&units=metric&appid=${config.OPENWEATHER_API_KEY}`
+    `${config.OPENWEATHER_WEATHER_ADDR}?lat=${state.coords.latitude}&lon=${state.coords.longitude}&units=${state.tempUnit}&appid=${config.OPENWEATHER_API_KEY}`
   );
   if (!res.ok) throw new Error(errorMessage);
   const data = await res.json();
@@ -70,4 +72,34 @@ export const getCurrentWeatherData = async function () {
     dayWeatherData.icon = dayData.weather[0].icon;
     state.weather.weekly.push(dayWeatherData);
   });
+};
+
+export const setWeeklyWeatherDropdownDisplay = function (displayStatus) {
+  state.weeklyWeatherDropdownDisplay = displayStatus;
+};
+
+const convertCelToFar = function (temp) {
+  return Math.round(temp * (9 / 5) + 32);
+};
+
+const convertFarToCel = function (temp) {
+  return Math.round((temp - 32) * (5 / 9));
+};
+
+export const toggleTempUnit = function () {
+  if (state.tempUnit === "metric") {
+    state.tempUnit = "imperial";
+    state.weather.current.temp = convertCelToFar(state.weather.current.temp);
+    state.weather.weekly.forEach((dayWeatherData) => {
+      dayWeatherData.maxTemp = convertCelToFar(dayWeatherData.maxTemp);
+      dayWeatherData.minTemp = convertCelToFar(dayWeatherData.minTemp);
+    });
+  } else {
+    state.tempUnit = "metric";
+    state.weather.current.temp = convertFarToCel(data.current.temp);
+    state.weather.weekly.forEach((dayWeatherData) => {
+      dayWeatherData.maxTemp = convertFarToCel(dayWeatherData.maxTemp);
+      dayWeatherData.minTemp = convertFarToCel(dayWeatherData.minTemp);
+    });
+  }
 };

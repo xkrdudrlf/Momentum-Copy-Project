@@ -2,14 +2,17 @@
 $bg-image: url("https://source.unsplash.com/1600x900/daily/?landscape");
 
 $header-padding: 20px;
-$drop-down-opacity: 0.85;
 $std-transition: 0.2s ease-in;
 
-:export {
-  dropDownOpacity: $drop-down-opacity;
-}
+$modal-bg-color: rgba(0, 0, 0, 0.85);
+$modal-secondary-color: rgb(189, 184, 184);
+$modal-hover-color: rgba(128, 128, 128, 0.719);
+$modal-std-border-radius: 5px;
 
-// Mixin
+$submodal-bg-color: rgb(70, 69, 69);
+$submodal-hover-color: rgba(190, 190, 190, 0.322);
+
+// Components (Mixin)
 @mixin arrow-up($dir1, $dir2, $dir1-value, $dir2-value) {
   content: "";
   position: absolute;
@@ -17,6 +20,114 @@ $std-transition: 0.2s ease-in;
   #{$dir2}: $dir2-value;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 10px solid black;
-  opacity: $drop-down-opacity;
+  border-bottom: 10px solid $modal-bg-color;
+}
+
+@mixin modal($dir1, $dir2, $dir1-value, $dir2-value, $height, $width) {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  #{$dir1}: $dir1-value;
+  #{$dir2}: $dir2-value;
+  height: $height;
+  width: $width;
+  background-color: $modal-bg-color;
+  border-radius: $modal-std-border-radius;
+}
+
+@mixin submodal($fx-dir, $t: 0, $r: 0, $b: 0, $l: 0) {
+  @if $t != 0 {
+    top: $t;
+  }
+  @if $r != 0 {
+    right: $r;
+  }
+  @if $b != 0 {
+    bottom: $b;
+  }
+  @if $l != 0 {
+    left: $l;
+  }
+  position: absolute;
+  display: none;
+  flex-direction: $fx-dir;
+  width: 100%;
+  border-radius: $modal-std-border-radius;
+  background-color: $submodal-bg-color;
+  padding: 8px 0;
+}
+
+@mixin submodal-item() {
+  padding: 7.5px 13px;
+  &:hover {
+    background-color: $submodal-hover-color;
+  }
+}
+
+// Components (Class)
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  height: 20px;
+
+  input {
+    opacity: 0;
+    height: 0;
+    width: 0;
+    &:checked + .slider {
+      background-color: rgb(40, 214, 40);
+    }
+    &:checked + .slider:before {
+      transform: translateX(13px);
+    }
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 13px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+}
+
+%spinner {
+  margin: 1rem 1.5rem;
+  text-align: center;
+  font-size: 20px;
+  i {
+    animation: rotate 1s infinite linear;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  @extend %spinner;
 }

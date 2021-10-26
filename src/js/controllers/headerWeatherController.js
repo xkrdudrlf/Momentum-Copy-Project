@@ -3,6 +3,7 @@ import headerWeatherView from "../views/headerWeatherView";
 
 const controlHeaderWeather = async function () {
   try {
+    headerWeatherView.renderSpinner();
     await model.getCurrentWeatherData();
     headerWeatherView.render(model.state);
   } catch (err) {
@@ -10,6 +11,19 @@ const controlHeaderWeather = async function () {
   }
 };
 
+const controlWeeklyWeatherDropdownDisplay = function (displayStatus) {
+  model.setWeeklyWeatherDropdownDisplay(displayStatus);
+};
+
+const controlToggleTempUnit = function () {
+  model.toggleTempUnit();
+  headerWeatherView.render(model.state);
+};
+
 export const init = function () {
   headerWeatherView.addHandlerRender(controlHeaderWeather);
+  headerWeatherView.addHandlerWeeklyWeatherDropdownDisplay(
+    controlWeeklyWeatherDropdownDisplay
+  );
+  headerWeatherView.addHandlerToggleTempUnit(controlToggleTempUnit);
 };

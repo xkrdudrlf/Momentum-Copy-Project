@@ -1,11 +1,19 @@
 import * as config from "../config";
+import View from "./View";
 
 /*
   < To do >
-  1. weather-box-current => dropdown toggle.
+  // 1. weather-box-current => dropdown toggle.
   2. ... button on the right-top corner of dropdown
-    - cursor: pointer;
+    // - cursor: pointer;
+    // - created submodal for ... click
+    // - need to make a slider.
+    // - Loading spinner implemented.
+    // - modularize modal/slider with mixin
+    // - toggle submodal
     - toggle unit (metric <-> farenheit)
+      => update only the changed parts(temperatures/checkbox checked status)
+      => do not just render again.
     - find & edit location with changes applied to the rest of weather information
   3. weekly weather slot.
     - stress the current selected weather slot
@@ -13,20 +21,48 @@ import * as config from "../config";
   4. regular update every certain minute or time.
     - give a user right to change for that
 */
-class HeaderWeatherView {
+class HeaderWeatherView extends View {
   _parentElement = document.querySelector(".header-right");
-  _data;
-
-  render(data) {
-    this._data = data;
-
-    const markup = this._generateMarkup();
-    this._parentElement.insertAdjacentHTML("afterbegin", markup);
-  }
 
   addHandlerRender(handler) {
     window.addEventListener("load", () => {
       handler();
+      this._parentElement.addEventListener("click", (e) => {
+        if (e.target.classList.contains("weather-settings")) {
+          const weatherOptionContainer = this._parentElement.querySelector(
+            ".weekly-weather-option-container"
+          );
+          if (weatherOptionContainer.style.display === "none")
+            weatherOptionContainer.style.display = "flex";
+          else weatherOptionContainer.style.display = "none";
+        }
+      });
+    });
+  }
+
+  addHandlerWeeklyWeatherDropdownDisplay(handler) {
+    this._parentElement.addEventListener("click", (e) => {
+      if (e.target.closest(".weather-box-current")) {
+        const weeklyWeatherDropdown = this._parentElement.querySelector(
+          ".weather-box-weekly-dropdown"
+        );
+
+        if (weeklyWeatherDropdown.style.display === "none") {
+          weeklyWeatherDropdown.style.display = "flex";
+          handler("flex");
+        } else {
+          weeklyWeatherDropdown.style.display = "none";
+          handler("none");
+        }
+      }
+    });
+  }
+
+  addHandlerToggleTempUnit(handler) {
+    this._parentElement.addEventListener("click", (e) => {
+      if (e.target.classList.contains("metricUnitCheckbox")) {
+        handler();
+      }
     });
   }
 
@@ -63,7 +99,16 @@ class HeaderWeatherView {
             }</span>
           </div>
           <div class="weather-box-weekly-top-right">
-            <i class="fas fa-ellipsis-h"></i>
+            <i class="fas fa-ellipsis-h weather-settings"></i>
+            <div class="weekly-weather-option-container">
+              <div class="weekly-weather-option-item">
+                <span>Metric units</span>
+                ${this._generateMarkupSlider("metricUnitCheckbox", true)}
+              </div>
+              <div class="weekly-weather-option-item">
+                <span>Edit location</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="weather-box-weekly-mid">
