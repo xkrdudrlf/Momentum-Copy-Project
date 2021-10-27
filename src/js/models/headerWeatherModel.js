@@ -69,10 +69,20 @@ const getCurrentLocation = function () {
   });
 };
 
-export const getCurrentWeatherData = async function () {
+export const getWeatherData = async function (
+  latitude = null,
+  longitude = null,
+  location = null
+) {
   const errorMessage = `Cannot get the current weather information from ${config.OPENWEATHER_WEATHER_ADDR}`;
 
-  await getCurrentLocation();
+  if (!latitude && !longitude & !location) {
+    await getCurrentLocation();
+  } else {
+    state.coords.latitude = latitude;
+    state.coords.longitude = longitude;
+    state.cityName = location;
+  }
 
   const res = await fetch(
     `${config.OPENWEATHER_WEATHER_ADDR}?lat=${state.coords.latitude}&lon=${state.coords.longitude}&units=${state.tempUnit}&appid=${config.OPENWEATHER_API_KEY}`
@@ -99,6 +109,37 @@ export const getCurrentWeatherData = async function () {
     state.weather.weekly.push(dayWeatherData);
   });
 };
+
+// export const getCurrentWeatherData = async function () {
+//   const errorMessage = `Cannot get the current weather information from ${config.OPENWEATHER_WEATHER_ADDR}`;
+
+//   await getCurrentLocation();
+
+//   const res = await fetch(
+//     `${config.OPENWEATHER_WEATHER_ADDR}?lat=${state.coords.latitude}&lon=${state.coords.longitude}&units=${state.tempUnit}&appid=${config.OPENWEATHER_API_KEY}`
+//   );
+//   if (!res.ok) throw new Error(errorMessage);
+//   const data = await res.json();
+
+//   const currDay = new Date().getDay();
+//   // Get current weather data
+//   state.weather.current.day = config.DATE[currDay];
+//   state.weather.current.description = data.current.weather[0].description;
+//   state.weather.current.icon = data.current.weather[0].icon;
+//   state.weather.current.temp = Math.round(data.current.temp);
+
+//   // Get weekly weather data
+//   const weeklyWeatherData = data.daily.slice(0, 5);
+//   state.weather.weekly = [];
+//   weeklyWeatherData.forEach((dayData, i) => {
+//     const dayWeatherData = {};
+//     dayWeatherData.day = config.DATE[(currDay + i) % 7];
+//     dayWeatherData.maxTemp = Math.round(dayData.temp.max);
+//     dayWeatherData.minTemp = Math.round(dayData.temp.min);
+//     dayWeatherData.icon = dayData.weather[0].icon;
+//     state.weather.weekly.push(dayWeatherData);
+//   });
+// };
 
 export const setWeeklyWeatherDropdownDisplay = function (displayStatus) {
   state.weeklyWeatherDropdownDisplay = displayStatus;

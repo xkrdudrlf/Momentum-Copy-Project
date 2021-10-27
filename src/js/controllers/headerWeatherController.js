@@ -3,7 +3,7 @@ import headerWeatherView from "../views/headerWeatherView";
 
 const controlHeaderWeather = async function () {
   try {
-    // await model.getCurrentWeatherData();
+    await model.getWeatherData();
     headerWeatherView.render(model.state);
   } catch (err) {
     console.error(err);
@@ -28,9 +28,18 @@ const controlLocationLiveSearch = async function (keyword) {
   }
 };
 
-const controlGetCurrentLocationWeather = function () {
-  // await model.getCurrentWeatherData();
-  // headerWeatherView.update(model.state);
+const controlGetCurrentLocationWeather = async function () {
+  await model.getWeatherData();
+  headerWeatherView.update(model.state);
+};
+
+const controlGetSelectedLocationWeather = async function (
+  latitude,
+  longitude,
+  location
+) {
+  await model.getWeatherData(latitude, longitude, location);
+  headerWeatherView.update(model.state);
 };
 
 export const init = function () {
@@ -42,5 +51,8 @@ export const init = function () {
   headerWeatherView.addHandlerLocationLiveSearch(controlLocationLiveSearch);
   headerWeatherView.addHandlerGetCurrentLocationWeather(
     controlGetCurrentLocationWeather
+  );
+  headerWeatherView.addHandlerGetSelectedLocationWeather(
+    controlGetSelectedLocationWeather
   );
 };

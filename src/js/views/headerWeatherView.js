@@ -15,7 +15,7 @@ import View from "./View";
     // - toggle unit (metric <-> farenheit)
       // => update only the changed parts(temperatures/checkbox checked status)
       // => do not just render again.
-    - find & edit location with changes applied to the rest of weather information
+    // - find & edit location with changes applied to the rest of weather information
   3. weekly weather slot.
     - stress the current selected weather slot
     - select weather slot with changes applied to the rest of weather information
@@ -64,12 +64,33 @@ class HeaderWeatherView extends View {
   }
 
   addHandlerGetCurrentLocationWeather(handler) {
-    // Update Weather Information based on the current location
-    this._parentElement.addEventListener("click", () => {
-      if (e.target.classList.contains("find-curr-location")) {
-        locationSearchModal.style.display = "none";
-        handler();
-      }
+    this._parentElement.addEventListener("click", (e) => {
+      if (!e.target.classList.contains("find-curr-location")) return;
+      const locationSearchModal = this._parentElement.querySelector(
+        ".location-search-modal"
+      );
+      locationSearchModal.style.display = "none";
+      handler();
+    });
+  }
+
+  addHandlerGetSelectedLocationWeather(handler) {
+    this._parentElement.addEventListener("click", (e) => {
+      if (!e.target.classList.contains("location-search-result")) return;
+      const locationSearchModal = this._parentElement.querySelector(
+        ".location-search-modal"
+      );
+      locationSearchModal.style.display = "none";
+
+      // For Update function. Both HTML Nodes should have the same number of Nodes.
+      const locationSearchResultsContainer = this._parentElement.querySelector(
+        ".location-search-results-container"
+      );
+      locationSearchResultsContainer.style.display = "none";
+      locationSearchResultsContainer.innerHTML = "";
+
+      const dataset = e.target.dataset;
+      handler(dataset.latitude, dataset.longitude, dataset.location);
     });
   }
 
@@ -127,6 +148,7 @@ class HeaderWeatherView extends View {
       this.renderSpinner(".location-search-results-container");
 
       inputTimer = setTimeout(() => {
+        if (e.target.value.length < config.MIN_SEARCH_INPUT_LENGTH) return;
         handler(e.target.value);
       }, config.SEARCH_INPUT_DELAY_TIME);
     });
@@ -267,8 +289,9 @@ class HeaderWeatherView extends View {
     this._data.locationSearchResult.forEach((result) => {
       markup += `
         <div class="location-search-result" 
-          data-lat="${result.location.latitude}" 
-          data-lon="${result.location.longitude}">
+          data-latitude="${result.coords.latitude}" 
+          data-longitude="${result.coords.longitude}"
+          data-location="${result.location.split(",")[0]}">
           ${result.location}
         </div>
       `;
