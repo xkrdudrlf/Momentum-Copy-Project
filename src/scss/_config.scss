@@ -64,6 +64,13 @@ $submodal-hover-color: rgba(190, 190, 190, 0.322);
   }
 }
 
+@mixin input {
+  background: none;
+  border: none;
+  outline-style: none;
+  font-size: 1.2rem;
+}
+
 // Components (Class)
 .switch {
   position: relative;

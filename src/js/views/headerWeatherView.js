@@ -11,9 +11,10 @@ import View from "./View";
     // - Loading spinner implemented.
     // - modularize modal/slider with mixin
     // - toggle submodal
-    - toggle unit (metric <-> farenheit)
-      => update only the changed parts(temperatures/checkbox checked status)
-      => do not just render again.
+
+    // - toggle unit (metric <-> farenheit)
+      // => update only the changed parts(temperatures/checkbox checked status)
+      // => do not just render again.
     - find & edit location with changes applied to the rest of weather information
   3. weekly weather slot.
     - stress the current selected weather slot
@@ -26,34 +27,66 @@ class HeaderWeatherView extends View {
 
   addHandlerRender(handler) {
     window.addEventListener("load", () => {
+      this.renderSpinner();
+
       handler();
+
       this._parentElement.addEventListener("click", (e) => {
+        // Show & Hide Weekly Weather Option Submodal
+        const weatherOptionContainer = this._parentElement.querySelector(
+          ".weekly-weather-option-container"
+        );
         if (e.target.classList.contains("weather-settings")) {
-          const weatherOptionContainer = this._parentElement.querySelector(
-            ".weekly-weather-option-container"
-          );
-          if (weatherOptionContainer.style.display === "none")
+          if (
+            window.getComputedStyle(weatherOptionContainer).display === "none"
+          )
             weatherOptionContainer.style.display = "flex";
           else weatherOptionContainer.style.display = "none";
+          return;
+        }
+
+        // Show & Hide Location Live Search Modal
+        const locationSearchModal = this._parentElement.querySelector(
+          ".location-search-modal"
+        );
+        if (e.target.classList.contains("edit-location")) {
+          locationSearchModal.style.display = "flex";
+          weatherOptionContainer.style.display = "none";
+          return;
+        }
+
+        if (e.target.classList.contains("close-location-search")) {
+          locationSearchModal.style.display = "none";
+          return;
         }
       });
     });
   }
 
+  addHandlerGetCurrentLocationWeather(handler) {
+    // Update Weather Information based on the current location
+    this._parentElement.addEventListener("click", () => {
+      if (e.target.classList.contains("find-curr-location")) {
+        locationSearchModal.style.display = "none";
+        handler();
+      }
+    });
+  }
+
   addHandlerWeeklyWeatherDropdownDisplay(handler) {
     this._parentElement.addEventListener("click", (e) => {
-      if (e.target.closest(".weather-box-current")) {
-        const weeklyWeatherDropdown = this._parentElement.querySelector(
-          ".weather-box-weekly-dropdown"
-        );
+      if (!e.target.closest(".weather-box-current")) return;
 
-        if (weeklyWeatherDropdown.style.display === "none") {
-          weeklyWeatherDropdown.style.display = "flex";
-          handler("flex");
-        } else {
-          weeklyWeatherDropdown.style.display = "none";
-          handler("none");
-        }
+      const weeklyWeatherDropdown = this._parentElement.querySelector(
+        ".weather-box-weekly-dropdown"
+      );
+
+      if (weeklyWeatherDropdown.style.display === "none") {
+        weeklyWeatherDropdown.style.display = "flex";
+        handler("flex");
+      } else {
+        weeklyWeatherDropdown.style.display = "none";
+        handler("none");
       }
     });
   }
@@ -64,6 +97,71 @@ class HeaderWeatherView extends View {
         handler();
       }
     });
+  }
+
+  addHandlerLocationLiveSearch(handler) {
+    let inputTimer;
+
+    // Get Search Keyword Input and Render the Search Results
+    this._parentElement.addEventListener("keyup", (e) => {
+      if (!e.target.classList.contains("location-search-input")) return;
+
+      const searchResultContainer = this._parentElement.querySelector(
+        ".location-search-results-container"
+      );
+
+      // 1. Do not respond when search keyworld lenght < 3
+      if (e.target.value.length < config.MIN_SEARCH_INPUT_LENGTH) {
+        if (window.getComputedStyle(searchResultContainer).display === "flex")
+          searchResultContainer.style.display = "none";
+        return;
+      }
+
+      // 2. Reset the timer and render the searchResult
+      clearTimeout(inputTimer);
+
+      if (window.getComputedStyle(searchResultContainer).display === "none") {
+        searchResultContainer.style.display = "flex";
+      }
+
+      this.renderSpinner(".location-search-results-container");
+
+      inputTimer = setTimeout(() => {
+        handler(e.target.value);
+      }, config.SEARCH_INPUT_DELAY_TIME);
+    });
+  }
+
+  toggleTempUnit(data) {
+    this._data = data;
+    const currentTemp = this._parentElement.querySelectorAll(".currTemp");
+    currentTemp.forEach((currTempNode) => {
+      currTempNode.textContent = this._data.weather.current.temp + "°";
+    });
+
+    const weeklyWeatherItems = this._parentElement.querySelectorAll(
+      ".weekly-weather-item"
+    );
+    weeklyWeatherItems.forEach((weeklyWeatherItem, i) => {
+      const dayWeatherData = weeklyWeatherItem.querySelectorAll("span");
+      dayWeatherData.item(1).textContent =
+        this._data.weather.weekly[i].maxTemp + "°";
+      dayWeatherData.item(2).textContent =
+        this._data.weather.weekly[i].minTemp + "°";
+    });
+  }
+
+  displaySearchResult(data) {
+    this._data = data;
+
+    const searchResultsContainer = this._parentElement.querySelector(
+      ".location-search-results-container"
+    );
+    searchResultsContainer.innerHTML = "";
+    searchResultsContainer.insertAdjacentHTML(
+      "afterbegin",
+      this._generateSearchResultMarkup()
+    );
   }
 
   _generateMarkup() {
@@ -80,7 +178,7 @@ class HeaderWeatherView extends View {
           <img src="${config.OPENWEATHER_IMG_ADDR}/${this._data.weather.current.icon}.png" 
               alt="weather-icon"
           >
-          ${this._data.weather.current.temp}°
+          <span class="currTemp">${this._data.weather.current.temp}°</span>
         </span>
         <span class="location">${this._data.cityName}</span>
       </div>
@@ -92,6 +190,21 @@ class HeaderWeatherView extends View {
     return `
       <div class="weather-box-weekly-dropdown">
         <div class="weather-box-weekly-top">
+          <div class="location-search-modal">
+            <div class="location-search-container">  
+              <input class="location-search-input" 
+                type="text" 
+                placeholder="Location"
+                value=${this._data.cityName}
+              >
+              <div class="location-search-btns">
+                <i class="fas fa-map-marker-alt find-curr-location"></i>
+                <i class="fas fa-times close-location-search"></i>
+              </div>
+            </div>
+            <div class="location-search-results-container">
+            </div>
+          </div>
           <div class="weather-box-weekly-top-left">
             <span class="region">${this._data.cityName}</span>
             <span class="weather">${
@@ -105,7 +218,7 @@ class HeaderWeatherView extends View {
                 <span>Metric units</span>
                 ${this._generateMarkupSlider("metricUnitCheckbox", true)}
               </div>
-              <div class="weekly-weather-option-item">
+              <div class="weekly-weather-option-item edit-location">
                 <span>Edit location</span>
               </div>
             </div>
@@ -118,7 +231,7 @@ class HeaderWeatherView extends View {
                   alt="weather-icon"
               >
             </div>
-            <div class="temperature">${this._data.weather.current.temp}°</div>
+            <div class="temperature currTemp">${this._data.weather.current.temp}°</div>
           </div>
 
           <div class="weekly-weather">
@@ -146,6 +259,22 @@ class HeaderWeatherView extends View {
         </div>
       </div>
     `;
+  }
+
+  _generateSearchResultMarkup() {
+    let markup = "";
+
+    this._data.locationSearchResult.forEach((result) => {
+      markup += `
+        <div class="location-search-result" 
+          data-lat="${result.location.latitude}" 
+          data-lon="${result.location.longitude}">
+          ${result.location}
+        </div>
+      `;
+    });
+
+    return markup;
   }
 }
 

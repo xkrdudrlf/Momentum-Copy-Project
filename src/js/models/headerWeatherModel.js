@@ -1,8 +1,34 @@
 import * as config from "../config";
 import "regenerator-runtime/runtime";
 
+// export const state = {
+//   cityName: null,
+//   coords: {
+//     latitude: 0,
+//     longitude: 0,
+//   },
+//   tempUnit: "metric",
+//   weather: {
+//     current: {
+//       day: null,
+//       description: null,
+//       temp: null,
+//       icon: null,
+//     },
+//     weekly: [
+//       {
+//         day: null,
+//         maxTemp: null,
+//         minTemp: null,
+//         icon: null,
+//       },
+//     ],
+//   },
+//   weeklyWeatherDropdownDisplay: "none",
+// };
+
 export const state = {
-  cityName: null,
+  cityName: "Busan",
   coords: {
     latitude: 0,
     longitude: 0,
@@ -10,23 +36,23 @@ export const state = {
   tempUnit: "metric",
   weather: {
     current: {
-      day: null,
-      description: null,
-      temp: null,
-      icon: null,
+      day: "MON",
+      description: "Sunny",
+      temp: 22,
+      icon: "01d",
     },
     weekly: [
       {
-        day: null,
-        maxTemp: null,
-        minTemp: null,
-        icon: null,
+        day: "Mon",
+        maxTemp: 22,
+        minTemp: 17,
+        icon: "01d",
       },
     ],
   },
   weeklyWeatherDropdownDisplay: "none",
+  locationSearchResult: [],
 };
-
 const getCurrentLocation = function () {
   const errorMessage = `Cannot get the current geolocation information from ${config.GEOLOCATION_ADDR}`;
 
@@ -66,7 +92,7 @@ export const getCurrentWeatherData = async function () {
   state.weather.weekly = [];
   weeklyWeatherData.forEach((dayData, i) => {
     const dayWeatherData = {};
-    dayWeatherData.day = config.DATE[currDay + i];
+    dayWeatherData.day = config.DATE[(currDay + i) % 7];
     dayWeatherData.maxTemp = Math.round(dayData.temp.max);
     dayWeatherData.minTemp = Math.round(dayData.temp.min);
     dayWeatherData.icon = dayData.weather[0].icon;
@@ -96,10 +122,30 @@ export const toggleTempUnit = function () {
     });
   } else {
     state.tempUnit = "metric";
-    state.weather.current.temp = convertFarToCel(data.current.temp);
+    state.weather.current.temp = convertFarToCel(state.weather.current.temp);
     state.weather.weekly.forEach((dayWeatherData) => {
       dayWeatherData.maxTemp = convertFarToCel(dayWeatherData.maxTemp);
       dayWeatherData.minTemp = convertFarToCel(dayWeatherData.minTemp);
     });
   }
+};
+
+export const getSearchResult = async function (keyword) {
+  state.locationSearchResult = [];
+  const response = await fetch(
+    `${config.MAPBOX_ADDR}/${keyword}.json?access_token=${config.MAPBOX_API_KEY}&limit=${config.MAX_SEARCH_RESULT}&language=en`
+  );
+  const data = await response.json();
+
+  data.features.forEach((record) => {
+    const searchResultobj = {
+      location: record.place_name,
+      coords: {
+        latitude: record.center[1],
+        longitude: record.center[0],
+      },
+    };
+
+    state.locationSearchResult.push(searchResultobj);
+  });
 };

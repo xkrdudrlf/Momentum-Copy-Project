@@ -10,18 +10,30 @@ export default class View {
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
 
-  _clear() {
-    this._parentElement.innerHTML = "";
+  _clear(element = null) {
+    if (!element) {
+      this._parentElement.innerHTML = "";
+      return;
+    }
+    this._parentElement.querySelector(element).innerHTML = "";
   }
 
-  renderSpinner() {
+  renderSpinner(element = null) {
     const markup = `
       <div class="spinner">
         <i class="fas fa-spinner"></i>
       </div>
     `;
-    this._clear();
-    this._parentElement.insertAdjacentHTML("afterbegin", markup);
+
+    if (!element) {
+      this._clear();
+      this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    } else {
+      this._clear(element);
+      this._parentElement
+        .querySelector(element)
+        .insertAdjacentHTML("afterbegin", markup);
+    }
   }
 
   _generateMarkupSlider(inputClass, isChecked = false) {
