@@ -10,10 +10,6 @@ const controlHeaderWeather = async function () {
   }
 };
 
-const controlWeeklyWeatherDropdownDisplay = function (displayStatus) {
-  model.setWeeklyWeatherDropdownDisplay(displayStatus);
-};
-
 const controlToggleTempUnit = function () {
   model.toggleTempUnit();
   headerWeatherView.toggleTempUnit(model.state);
@@ -44,9 +40,6 @@ const controlGetSelectedLocationWeather = async function (
 
 export const init = function () {
   headerWeatherView.addHandlerRender(controlHeaderWeather);
-  headerWeatherView.addHandlerWeeklyWeatherDropdownDisplay(
-    controlWeeklyWeatherDropdownDisplay
-  );
   headerWeatherView.addHandlerToggleTempUnit(controlToggleTempUnit);
   headerWeatherView.addHandlerLocationLiveSearch(controlLocationLiveSearch);
   headerWeatherView.addHandlerGetCurrentLocationWeather(

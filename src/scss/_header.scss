@@ -199,10 +199,19 @@
         display: flex;
         flex-direction: column;
         flex: 1;
-        .region {
-          font-size: 1.3rem;
+        &-top {
+          display: flex;
           margin-bottom: 4px;
-          color: white;
+          align-items: baseline;
+          .region {
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 10px;
+          }
+          .selected-day {
+            font-size: 1.1rem;
+            color: $modal-secondary-color;
+          }
         }
         .weather {
           font-size: 1rem;
@@ -235,9 +244,6 @@
             justify-content: space-between;
           }
         }
-
-        // .metricUnitCheckbox {
-        // }
       }
     }
 
@@ -267,7 +273,6 @@
           font-size: 3.5rem;
         }
       }
-
       .weekly-weather {
         display: flex;
         justify-content: space-around;
@@ -276,12 +281,17 @@
         border-left: none;
         border-right: none;
         &-item {
+          flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           align-items: center;
           padding: 6px 0;
           font-size: 0.9rem;
+          border-radius: 5px;
+          &:hover {
+            background-color: rgba(156, 155, 155, 0.15);
+          }
         }
       }
     }

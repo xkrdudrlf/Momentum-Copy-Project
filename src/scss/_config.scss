@@ -1,16 +1,21 @@
 // Variables
-$bg-image: url("https://source.unsplash.com/1600x900/daily/?landscape");
+// $bg-image: url("https://source.unsplash.com/1600x900/daily/?landscape");
+$bg-image: url("../img/background.jpg");
+
+$hover-color-light: rgba(156, 155, 155, 0.15);
+$hover-color-medium: rgba(128, 128, 128, 0.719);
+$hover-color-heavy: rgba(190, 190, 190, 0.322);
 
 $header-padding: 20px;
 $std-transition: 0.2s ease-in;
 
 $modal-bg-color: rgba(0, 0, 0, 0.85);
 $modal-secondary-color: rgb(189, 184, 184);
-$modal-hover-color: rgba(128, 128, 128, 0.719);
+$modal-hover-color: $hover-color-medium;
 $modal-std-border-radius: 5px;
 
 $submodal-bg-color: rgb(70, 69, 69);
-$submodal-hover-color: rgba(190, 190, 190, 0.322);
+$submodal-hover-color: $hover-color-heavy;
 
 // Components (Mixin)
 @mixin arrow-up($dir1, $dir2, $dir1-value, $dir2-value) {

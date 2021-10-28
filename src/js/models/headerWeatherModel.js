@@ -1,31 +1,6 @@
 import * as config from "../config";
+import { getDateWithOffset } from "../utility";
 import "regenerator-runtime/runtime";
-
-// export const state = {
-//   cityName: null,
-//   coords: {
-//     latitude: 0,
-//     longitude: 0,
-//   },
-//   tempUnit: "metric",
-//   weather: {
-//     current: {
-//       day: null,
-//       description: null,
-//       temp: null,
-//       icon: null,
-//     },
-//     weekly: [
-//       {
-//         day: null,
-//         maxTemp: null,
-//         minTemp: null,
-//         icon: null,
-//       },
-//     ],
-//   },
-//   weeklyWeatherDropdownDisplay: "none",
-// };
 
 export const state = {
   cityName: "Busan",
@@ -47,12 +22,20 @@ export const state = {
         maxTemp: 22,
         minTemp: 17,
         icon: "01d",
+        description: "Sunny",
+      },
+      {
+        day: "Tue",
+        maxTemp: 23,
+        minTemp: 15,
+        icon: "01d",
+        description: "Cloudy",
       },
     ],
   },
-  weeklyWeatherDropdownDisplay: "none",
   locationSearchResult: [],
 };
+
 const getCurrentLocation = function () {
   const errorMessage = `Cannot get the current geolocation information from ${config.GEOLOCATION_ADDR}`;
 
@@ -89,10 +72,11 @@ export const getWeatherData = async function (
   );
   if (!res.ok) throw new Error(errorMessage);
   const data = await res.json();
+  const offset = data.timezone_offset;
 
-  const currDay = new Date().getDay();
   // Get current weather data
-  state.weather.current.day = config.DATE[currDay];
+  state.weather.current.day =
+    config.DATE[getDateWithOffset(data.current.dt, offset).getDay() % 7];
   state.weather.current.description = data.current.weather[0].description;
   state.weather.current.icon = data.current.weather[0].icon;
   state.weather.current.temp = Math.round(data.current.temp);
@@ -102,47 +86,16 @@ export const getWeatherData = async function (
   state.weather.weekly = [];
   weeklyWeatherData.forEach((dayData, i) => {
     const dayWeatherData = {};
-    dayWeatherData.day = config.DATE[(currDay + i) % 7];
+
+    dayWeatherData.day =
+      config.DATE[getDateWithOffset(dayData.dt, offset).getDay() % 7];
     dayWeatherData.maxTemp = Math.round(dayData.temp.max);
     dayWeatherData.minTemp = Math.round(dayData.temp.min);
     dayWeatherData.icon = dayData.weather[0].icon;
+    dayWeatherData.description = dayData.weather[0].main;
+
     state.weather.weekly.push(dayWeatherData);
   });
-};
-
-// export const getCurrentWeatherData = async function () {
-//   const errorMessage = `Cannot get the current weather information from ${config.OPENWEATHER_WEATHER_ADDR}`;
-
-//   await getCurrentLocation();
-
-//   const res = await fetch(
-//     `${config.OPENWEATHER_WEATHER_ADDR}?lat=${state.coords.latitude}&lon=${state.coords.longitude}&units=${state.tempUnit}&appid=${config.OPENWEATHER_API_KEY}`
-//   );
-//   if (!res.ok) throw new Error(errorMessage);
-//   const data = await res.json();
-
-//   const currDay = new Date().getDay();
-//   // Get current weather data
-//   state.weather.current.day = config.DATE[currDay];
-//   state.weather.current.description = data.current.weather[0].description;
-//   state.weather.current.icon = data.current.weather[0].icon;
-//   state.weather.current.temp = Math.round(data.current.temp);
-
-//   // Get weekly weather data
-//   const weeklyWeatherData = data.daily.slice(0, 5);
-//   state.weather.weekly = [];
-//   weeklyWeatherData.forEach((dayData, i) => {
-//     const dayWeatherData = {};
-//     dayWeatherData.day = config.DATE[(currDay + i) % 7];
-//     dayWeatherData.maxTemp = Math.round(dayData.temp.max);
-//     dayWeatherData.minTemp = Math.round(dayData.temp.min);
-//     dayWeatherData.icon = dayData.weather[0].icon;
-//     state.weather.weekly.push(dayWeatherData);
-//   });
-// };
-
-export const setWeeklyWeatherDropdownDisplay = function (displayStatus) {
-  state.weeklyWeatherDropdownDisplay = displayStatus;
 };
 
 const convertCelToFar = function (temp) {

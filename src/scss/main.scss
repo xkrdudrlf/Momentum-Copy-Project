@@ -3,6 +3,10 @@
 @import "_main";
 @import "footer";
 
+:export {
+  hoverColorLight: $hover-color-light;
+}
+
 * {
   margin: 0;
   padding: 0;

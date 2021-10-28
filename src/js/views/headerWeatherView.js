@@ -1,6 +1,5 @@
 import * as config from "../config";
 import View from "./View";
-
 /*
   < To do >
   // 1. weather-box-current => dropdown toggle.
@@ -16,9 +15,9 @@ import View from "./View";
       // => update only the changed parts(temperatures/checkbox checked status)
       // => do not just render again.
     // - find & edit location with changes applied to the rest of weather information
-  3. weekly weather slot.
-    - stress the current selected weather slot
-    - select weather slot with changes applied to the rest of weather information
+  // 3. weekly weather slot.
+  //   - stress the current selected weather slot
+  //   - select weather slot with changes applied to the rest of weather information
   4. regular update every certain minute or time.
     - give a user right to change for that
 */
@@ -31,7 +30,39 @@ class HeaderWeatherView extends View {
 
       handler();
 
+      // Hide Weather Box Weekly Dropdown upon clikc outside the parentElement.
+      window.addEventListener("click", (e) => {
+        // Edge Case 1
+        if (e.target.closest(".weather-box-current")) return;
+
+        if (!e.target.closest(".weather-box-weekly-dropdown")) {
+          // Edge Case 2
+          if (e.target.classList.contains("location-search-result")) return;
+
+          const weatherBoxWeeklyDropdown = this._parentElement.querySelector(
+            ".weather-box-weekly-dropdown"
+          );
+          if (getComputedStyle(weatherBoxWeeklyDropdown).display !== "flex")
+            return;
+          weatherBoxWeeklyDropdown.style.display = "none";
+        }
+      });
+
       this._parentElement.addEventListener("click", (e) => {
+        // Show & Hide Weather Box Weekly Dropdown
+        if (e.target.closest(".weather-box-current")) {
+          const weatherBoxWeeklyDropdown = this._parentElement.querySelector(
+            ".weather-box-weekly-dropdown"
+          );
+
+          if (weatherBoxWeeklyDropdown.style.display === "none") {
+            weatherBoxWeeklyDropdown.style.display = "flex";
+          } else {
+            weatherBoxWeeklyDropdown.style.display = "none";
+          }
+          return;
+        }
+
         // Show & Hide Weekly Weather Option Submodal
         const weatherOptionContainer = this._parentElement.querySelector(
           ".weekly-weather-option-container"
@@ -59,55 +90,88 @@ class HeaderWeatherView extends View {
           locationSearchModal.style.display = "none";
           return;
         }
+
+        // Update upon Weekly Weather Item Selection
+        if (e.target.closest(".weekly-weather-item")) {
+          // Update Background
+          const weeklyWeatherItems = this._parentElement.querySelectorAll(
+            ".weekly-weather-item"
+          );
+          let firstWeeklyItem = null;
+          weeklyWeatherItems.forEach((el, i) => {
+            if (i === 0) firstWeeklyItem = el;
+            el.style.backgroundColor = "";
+          });
+
+          const selectedWeeklyWeatherItem = e.target.closest(
+            ".weekly-weather-item"
+          );
+          selectedWeeklyWeatherItem.style.backgroundColor = getComputedStyle(
+            selectedWeeklyWeatherItem
+          ).backgroundColor;
+
+          // Update Weather Content for the Selected Item
+          const day = this._parentElement.querySelector(".selected-day");
+          const description = this._parentElement.querySelector(".weather");
+          const img = this._parentElement
+            .querySelector(".weather-icon")
+            .querySelector("img");
+          const temp = this._parentElement.querySelector(".selected-temp");
+
+          if (firstWeeklyItem === selectedWeeklyWeatherItem) {
+            day.textContent = "";
+            description.textContent = this._data.weather.current.description;
+            img.setAttribute(
+              "src",
+              `${config.OPENWEATHER_IMG_ADDR}/${this._data.weather.current.icon}.png`
+            );
+            temp.textContent = `${this._data.weather.current.temp}°`;
+            return;
+          }
+
+          const dataset = selectedWeeklyWeatherItem.dataset;
+          day.textContent = dataset.day;
+          description.textContent = dataset.description;
+          img.setAttribute("src", dataset.img);
+          temp.textContent = `${dataset.maxtemp}°`;
+          return;
+        }
       });
     });
   }
 
   addHandlerGetCurrentLocationWeather(handler) {
     this._parentElement.addEventListener("click", (e) => {
-      if (!e.target.classList.contains("find-curr-location")) return;
-      const locationSearchModal = this._parentElement.querySelector(
-        ".location-search-modal"
-      );
-      locationSearchModal.style.display = "none";
-      handler();
+      if (e.target.classList.contains("find-curr-location")) {
+        const locationSearchModal = this._parentElement.querySelector(
+          ".location-search-modal"
+        );
+        locationSearchModal.style.display = "none";
+        handler();
+        return;
+      }
     });
   }
 
   addHandlerGetSelectedLocationWeather(handler) {
     this._parentElement.addEventListener("click", (e) => {
-      if (!e.target.classList.contains("location-search-result")) return;
-      const locationSearchModal = this._parentElement.querySelector(
-        ".location-search-modal"
-      );
-      locationSearchModal.style.display = "none";
+      if (e.target.classList.contains("location-search-result")) {
+        const locationSearchModal = this._parentElement.querySelector(
+          ".location-search-modal"
+        );
+        locationSearchModal.style.display = "none";
 
-      // For Update function. Both HTML Nodes should have the same number of Nodes.
-      const locationSearchResultsContainer = this._parentElement.querySelector(
-        ".location-search-results-container"
-      );
-      locationSearchResultsContainer.style.display = "none";
-      locationSearchResultsContainer.innerHTML = "";
+        // For Update function. Both HTML Nodes should have the same number of Nodes.
+        const locationSearchResultsContainer =
+          this._parentElement.querySelector(
+            ".location-search-results-container"
+          );
+        locationSearchResultsContainer.style.display = "none";
+        locationSearchResultsContainer.innerHTML = "";
 
-      const dataset = e.target.dataset;
-      handler(dataset.latitude, dataset.longitude, dataset.location);
-    });
-  }
-
-  addHandlerWeeklyWeatherDropdownDisplay(handler) {
-    this._parentElement.addEventListener("click", (e) => {
-      if (!e.target.closest(".weather-box-current")) return;
-
-      const weeklyWeatherDropdown = this._parentElement.querySelector(
-        ".weather-box-weekly-dropdown"
-      );
-
-      if (weeklyWeatherDropdown.style.display === "none") {
-        weeklyWeatherDropdown.style.display = "flex";
-        handler("flex");
-      } else {
-        weeklyWeatherDropdown.style.display = "none";
-        handler("none");
+        const dataset = e.target.dataset;
+        handler(dataset.latitude, dataset.longitude, dataset.location);
+        return;
       }
     });
   }
@@ -116,6 +180,7 @@ class HeaderWeatherView extends View {
     this._parentElement.addEventListener("click", (e) => {
       if (e.target.classList.contains("metricUnitCheckbox")) {
         handler();
+        return;
       }
     });
   }
@@ -228,7 +293,11 @@ class HeaderWeatherView extends View {
             </div>
           </div>
           <div class="weather-box-weekly-top-left">
-            <span class="region">${this._data.cityName}</span>
+            <div class="weather-box-weekly-top-left-top">
+              <span class="region">${this._data.cityName}</span>
+              <span class="selected-day"></span>
+              <div class="spinner-box"></div>
+            </div>
             <span class="weather">${
               this._data.weather.current.description
             }</span>
@@ -253,13 +322,19 @@ class HeaderWeatherView extends View {
                   alt="weather-icon"
               >
             </div>
-            <div class="temperature currTemp">${this._data.weather.current.temp}°</div>
+            <div class="temperature currTemp selected-temp">${this._data.weather.current.temp}°</div>
           </div>
 
           <div class="weekly-weather">
             ${this._data.weather.weekly.map((dayWeatherData, i) => {
               return `
-                <div class="weekly-weather-item">
+                <div class="weekly-weather-item"
+                  data-day="${this._data.weather.weekly[i].day}"
+                  data-description="${this._data.weather.weekly[i].description}"
+                  data-img="${config.OPENWEATHER_IMG_ADDR}/${this._data.weather.weekly[i].icon}.png"
+                  data-maxtemp="${this._data.weather.weekly[i].maxTemp}"
+                  data-mintemp="${this._data.weather.weekly[i].minTemp}"
+                >
                   <span>${this._data.weather.weekly[i].day}</span>
                   <img src="${config.OPENWEATHER_IMG_ADDR}/${this._data.weather.weekly[i].icon}.png" 
                       alt="weather-icon"
