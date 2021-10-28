@@ -40,6 +40,7 @@ const controlGetSelectedLocationWeather = async function (
 
 export const init = function () {
   headerWeatherView.addHandlerRender(controlHeaderWeather);
+  headerWeatherView.addHandlerRegularUpdate(controlGetSelectedLocationWeather);
   headerWeatherView.addHandlerToggleTempUnit(controlToggleTempUnit);
   headerWeatherView.addHandlerLocationLiveSearch(controlLocationLiveSearch);
   headerWeatherView.addHandlerGetCurrentLocationWeather(

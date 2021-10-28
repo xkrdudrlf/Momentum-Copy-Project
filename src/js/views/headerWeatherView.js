@@ -18,8 +18,8 @@ import View from "./View";
   // 3. weekly weather slot.
   //   - stress the current selected weather slot
   //   - select weather slot with changes applied to the rest of weather information
-  4. regular update every certain minute or time.
-    - give a user right to change for that
+  // 4. regular update every certain minute or time.
+  //   - give a user right to change for that
 */
 class HeaderWeatherView extends View {
   _parentElement = document.querySelector(".header-right");
@@ -27,117 +27,23 @@ class HeaderWeatherView extends View {
   addHandlerRender(handler) {
     window.addEventListener("load", () => {
       this.renderSpinner();
-
       handler();
-
-      // Hide Weather Box Weekly Dropdown upon clikc outside the parentElement.
-      window.addEventListener("click", (e) => {
-        // Edge Case 1
-        if (e.target.closest(".weather-box-current")) return;
-
-        if (!e.target.closest(".weather-box-weekly-dropdown")) {
-          // Edge Case 2
-          if (e.target.classList.contains("location-search-result")) return;
-
-          const weatherBoxWeeklyDropdown = this._parentElement.querySelector(
-            ".weather-box-weekly-dropdown"
-          );
-          if (getComputedStyle(weatherBoxWeeklyDropdown).display !== "flex")
-            return;
-          weatherBoxWeeklyDropdown.style.display = "none";
-        }
-      });
-
-      this._parentElement.addEventListener("click", (e) => {
-        // Show & Hide Weather Box Weekly Dropdown
-        if (e.target.closest(".weather-box-current")) {
-          const weatherBoxWeeklyDropdown = this._parentElement.querySelector(
-            ".weather-box-weekly-dropdown"
-          );
-
-          if (weatherBoxWeeklyDropdown.style.display === "none") {
-            weatherBoxWeeklyDropdown.style.display = "flex";
-          } else {
-            weatherBoxWeeklyDropdown.style.display = "none";
-          }
-          return;
-        }
-
-        // Show & Hide Weekly Weather Option Submodal
-        const weatherOptionContainer = this._parentElement.querySelector(
-          ".weekly-weather-option-container"
-        );
-        if (e.target.classList.contains("weather-settings")) {
-          if (
-            window.getComputedStyle(weatherOptionContainer).display === "none"
-          )
-            weatherOptionContainer.style.display = "flex";
-          else weatherOptionContainer.style.display = "none";
-          return;
-        }
-
-        // Show & Hide Location Live Search Modal
-        const locationSearchModal = this._parentElement.querySelector(
-          ".location-search-modal"
-        );
-        if (e.target.classList.contains("edit-location")) {
-          locationSearchModal.style.display = "flex";
-          weatherOptionContainer.style.display = "none";
-          return;
-        }
-
-        if (e.target.classList.contains("close-location-search")) {
-          locationSearchModal.style.display = "none";
-          return;
-        }
-
-        // Update upon Weekly Weather Item Selection
-        if (e.target.closest(".weekly-weather-item")) {
-          // Update Background
-          const weeklyWeatherItems = this._parentElement.querySelectorAll(
-            ".weekly-weather-item"
-          );
-          let firstWeeklyItem = null;
-          weeklyWeatherItems.forEach((el, i) => {
-            if (i === 0) firstWeeklyItem = el;
-            el.style.backgroundColor = "";
-          });
-
-          const selectedWeeklyWeatherItem = e.target.closest(
-            ".weekly-weather-item"
-          );
-          selectedWeeklyWeatherItem.style.backgroundColor = getComputedStyle(
-            selectedWeeklyWeatherItem
-          ).backgroundColor;
-
-          // Update Weather Content for the Selected Item
-          const day = this._parentElement.querySelector(".selected-day");
-          const description = this._parentElement.querySelector(".weather");
-          const img = this._parentElement
-            .querySelector(".weather-icon")
-            .querySelector("img");
-          const temp = this._parentElement.querySelector(".selected-temp");
-
-          if (firstWeeklyItem === selectedWeeklyWeatherItem) {
-            day.textContent = "";
-            description.textContent = this._data.weather.current.description;
-            img.setAttribute(
-              "src",
-              `${config.OPENWEATHER_IMG_ADDR}/${this._data.weather.current.icon}.png`
-            );
-            temp.textContent = `${this._data.weather.current.temp}°`;
-            return;
-          }
-
-          const dataset = selectedWeeklyWeatherItem.dataset;
-          day.textContent = dataset.day;
-          description.textContent = dataset.description;
-          img.setAttribute("src", dataset.img);
-          temp.textContent = `${dataset.maxtemp}°`;
-          return;
-        }
-      });
+      this._addHandlerOutsideClick();
+      this._addHandlerWeatherBoxWeeklyDropdwnDisplay();
+      this._addHandlerWeatherOptionDisplay();
+      this._addHandlerLocationLiveSearchDisplay();
+      this._addHandlerWeatherItemSelection();
     });
+  }
+
+  addHandlerRegularUpdate(handler) {
+    setInterval(() => {
+      handler(
+        this._data.coords.latitude,
+        this._data.coords.longitude,
+        this._data.cityName
+      );
+    }, config.WEATHER_UPDATE_INTERVAL);
   }
 
   addHandlerGetCurrentLocationWeather(handler) {
@@ -249,6 +155,131 @@ class HeaderWeatherView extends View {
       "afterbegin",
       this._generateSearchResultMarkup()
     );
+  }
+
+  _addHandlerOutsideClick() {
+    // Hide Weather Box Weekly Dropdown upon click outside the parentElement.
+    window.addEventListener("click", (e) => {
+      // Edge Case 1
+      if (e.target.closest(".weather-box-current")) return;
+
+      if (!e.target.closest(".weather-box-weekly-dropdown")) {
+        // Edge Case 2
+        if (e.target.classList.contains("location-search-result")) return;
+
+        const weatherBoxWeeklyDropdown = this._parentElement.querySelector(
+          ".weather-box-weekly-dropdown"
+        );
+        if (getComputedStyle(weatherBoxWeeklyDropdown).display !== "flex")
+          return;
+        weatherBoxWeeklyDropdown.style.display = "none";
+      }
+    });
+  }
+
+  _addHandlerWeatherBoxWeeklyDropdwnDisplay() {
+    // Show & Hide Weather Box Weekly Dropdown
+    this._parentElement.addEventListener("click", (e) => {
+      if (e.target.closest(".weather-box-current")) {
+        const weatherBoxWeeklyDropdown = this._parentElement.querySelector(
+          ".weather-box-weekly-dropdown"
+        );
+
+        if (weatherBoxWeeklyDropdown.style.display === "none") {
+          weatherBoxWeeklyDropdown.style.display = "flex";
+        } else {
+          weatherBoxWeeklyDropdown.style.display = "none";
+        }
+        return;
+      }
+    });
+  }
+
+  _addHandlerWeatherOptionDisplay() {
+    // Show & Hide Weekly Weather Option Submodal
+    this._parentElement.addEventListener("click", (e) => {
+      const weatherOptionContainer = this._parentElement.querySelector(
+        ".weekly-weather-option-container"
+      );
+      if (e.target.classList.contains("weather-settings")) {
+        if (window.getComputedStyle(weatherOptionContainer).display === "none")
+          weatherOptionContainer.style.display = "flex";
+        else weatherOptionContainer.style.display = "none";
+        return;
+      }
+    });
+  }
+
+  _addHandlerLocationLiveSearchDisplay() {
+    // Show & Hide Location Live Search Modal
+    this._parentElement.addEventListener("click", (e) => {
+      const locationSearchModal = this._parentElement.querySelector(
+        ".location-search-modal"
+      );
+      const weatherOptionContainer = this._parentElement.querySelector(
+        ".weekly-weather-option-container"
+      );
+      if (e.target.classList.contains("edit-location")) {
+        locationSearchModal.style.display = "flex";
+        weatherOptionContainer.style.display = "none";
+        return;
+      }
+
+      if (e.target.classList.contains("close-location-search")) {
+        locationSearchModal.style.display = "none";
+        return;
+      }
+    });
+  }
+
+  _addHandlerWeatherItemSelection() {
+    this._parentElement.addEventListener("click", (e) => {
+      // Update upon Weekly Weather Item Selection
+      if (e.target.closest(".weekly-weather-item")) {
+        // Update Background
+        const weeklyWeatherItems = this._parentElement.querySelectorAll(
+          ".weekly-weather-item"
+        );
+        let firstWeeklyItem = null;
+        weeklyWeatherItems.forEach((el, i) => {
+          if (i === 0) firstWeeklyItem = el;
+          el.style.backgroundColor = "";
+        });
+
+        const selectedWeeklyWeatherItem = e.target.closest(
+          ".weekly-weather-item"
+        );
+        selectedWeeklyWeatherItem.style.backgroundColor = getComputedStyle(
+          selectedWeeklyWeatherItem
+        ).backgroundColor;
+
+        // Update Weather Content for the Selected Item
+        const day = this._parentElement.querySelector(".selected-day");
+        const description = this._parentElement.querySelector(".weather");
+        const img = this._parentElement
+          .querySelector(".weather-icon")
+          .querySelector("img");
+        const temp = this._parentElement.querySelector(".selected-temp");
+
+        if (firstWeeklyItem === selectedWeeklyWeatherItem) {
+          day.textContent = "";
+          description.textContent = this._data.weather.current.description;
+          img.setAttribute(
+            "src",
+            `${config.OPENWEATHER_IMG_ADDR}/${this._data.weather.current.icon}.png`
+          );
+          temp.textContent = `${this._data.weather.current.temp}°`;
+          return;
+        }
+
+        const dataset = selectedWeeklyWeatherItem.dataset;
+        day.textContent = dataset.day;
+        description.textContent = dataset.description;
+        img.setAttribute("src", dataset.img);
+        temp.textContent = `${dataset.maxtemp}°`;
+        return;
+      }
+    });
   }
 
   _generateMarkup() {

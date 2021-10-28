@@ -23,3 +23,5 @@ export const MAX_SEARCH_RESULT = 4;
 export const MAPBOX_ADDR = "https://api.mapbox.com/geocoding/v5/mapbox.places";
 export const MAPBOX_API_KEY =
   "pk.eyJ1IjoieGtyZHVkcmxmIiwiYSI6ImNrZ3ZqOGoydjAwdzcycHF0cDdmaDQweDgifQ.GcqzClyyzty9f-8OoMrchQ";
+
+export const WEATHER_UPDATE_INTERVAL = 30 * 60 * 1000; // 30 mins
