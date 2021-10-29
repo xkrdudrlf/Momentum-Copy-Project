@@ -10,24 +10,132 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    .time {
-      font-size: 10rem;
+    .time-container {
+      display: flex;
+      align-items: center;
+
+      .time {
+        font-size: 10rem;
+      }
+
+      .time-settings {
+        visibility: hidden;
+        position: relative;
+        margin-left: 30px;
+        &-btn {
+          @include settingsBtn;
+          font-size: 1.2rem;
+        }
+
+        &-modal-container {
+          visibility: hidden;
+        }
+
+        &-modal-arrow-up {
+          @include arrow-up(top, left, 35px, 5px);
+        }
+
+        &-modal {
+          position: absolute;
+          top: 45px;
+          left: -10px;
+          width: 170px;
+          padding: 10px 12px;
+          border-radius: $modal-std-border-radius;
+          background-color: $modal-bg-color;
+          &-item {
+            display: flex;
+            justify-content: space-between;
+          }
+        }
+      }
     }
-    .greeting-message {
-      font-size: 3.5rem;
+    .greeting-container {
+      display: flex;
+      align-items: center;
+
+      .greeting-message {
+        position: relative;
+        font-size: 3.5rem;
+
+        #username-container {
+          position: absolute;
+          height: 100%;
+          overflow: hidden;
+          z-index: -1;
+          opacity: 1;
+        }
+
+        #username-form {
+          display: inline;
+        }
+
+        #username {
+          @include input;
+          font-size: 3.5rem;
+          border-bottom: 3px white solid;
+          opacity: 0;
+        }
+      }
+
+      .name-settings {
+        position: relative;
+        &-btn {
+          @include settingsBtn;
+          visibility: hidden;
+          margin-left: 10px;
+        }
+
+        &-modal-container {
+          visibility: hidden;
+        }
+
+        &-modal-arrow-up {
+          @include arrow-up(top, left, 30px, 15px);
+        }
+
+        &-modal {
+          position: absolute;
+          top: 40px;
+          left: 5px;
+          width: 170px;
+          padding: 5px 0;
+          border-radius: $modal-std-border-radius;
+          background-color: $modal-bg-color;
+          &-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 12px;
+            &:hover {
+              background-color: $hover-color-lightest;
+            }
+          }
+        }
+      }
     }
   }
+
   &-bot {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    .main-focus-heading {
+
+    .focus-heading {
       font-size: 2.5rem;
     }
-    .main-focus {
-      #main-focus-input {
+    .focus {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      form {
+        width: 100%;
+      }
+
+      #focus-input {
         width: 100%;
         background: none;
         border: none;
@@ -35,6 +143,62 @@
         outline-style: none;
         font-size: 2.5rem;
         text-align: center;
+      }
+
+      label {
+        font-size: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 1.2px;
+      }
+
+      &-task {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 2rem;
+
+        &-checkbox {
+          height: 20px;
+          width: 20px;
+          border-radius: 10px;
+        }
+
+        &-content {
+          margin: 0 15px;
+          // text-decoration: line-through;
+        }
+
+        .focus-settings {
+          position: relative;
+
+          &-btn {
+            @include settingsBtn;
+          }
+
+          &-modal-container {
+          }
+
+          &-modal-arrow-up {
+            @include arrow-up(top, left, 40px, 10px);
+          }
+
+          &-modal {
+            @include modal(top, left, 50px, -10px, 70px, 100px);
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.92rem;
+            padding: 7px 0;
+            z-index: 1;
+            &-item {
+              display: flex;
+              justify-content: space-around;
+              padding: 5px 0;
+              &:hover {
+                background-color: $hover-color-lightest;
+              }
+            }
+          }
+        }
       }
     }
   }

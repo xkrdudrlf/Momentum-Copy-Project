@@ -24,13 +24,6 @@ export const state = {
         icon: "01d",
         description: "Sunny",
       },
-      {
-        day: "Tue",
-        maxTemp: 23,
-        minTemp: 15,
-        icon: "01d",
-        description: "Cloudy",
-      },
     ],
   },
   locationSearchResult: [],
@@ -40,15 +33,24 @@ const getCurrentLocation = function () {
   const errorMessage = `Cannot get the current geolocation information from ${config.GEOLOCATION_ADDR}`;
 
   return new Promise(async function (resolve, reject) {
-    const res = await fetch(config.GEOLOCATION_ADDR);
-    if (!res.ok) {
-      return reject(new Error(errorMessage));
+    try {
+      // const res = await fetch(config.GEOLOCATION_ADDR);
+
+      // if (!res.ok) {
+      //   return reject(new Error(errorMessage));
+      // }
+
+      // const data = await res.json();
+      // state.cityName = data["city"];
+      // state.coords.latitude = data["latitude"];
+      // state.coords.longitude = data["longitude"];
+      state.cityName = "Busan";
+      state.coords.latitude = 35;
+      state.coords.longitude = 127;
+      resolve();
+    } catch (err) {
+      return reject(new Error(err.message));
     }
-    const data = await res.json();
-    state.cityName = data["city"];
-    state.coords.latitude = data["latitude"];
-    state.coords.longitude = data["longitude"];
-    resolve();
   });
 };
 

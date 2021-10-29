@@ -1,26 +1,6 @@
 import * as config from "../config";
 import View from "./View";
-/*
-  < To do >
-  // 1. weather-box-current => dropdown toggle.
-  2. ... button on the right-top corner of dropdown
-    // - cursor: pointer;
-    // - created submodal for ... click
-    // - need to make a slider.
-    // - Loading spinner implemented.
-    // - modularize modal/slider with mixin
-    // - toggle submodal
 
-    // - toggle unit (metric <-> farenheit)
-      // => update only the changed parts(temperatures/checkbox checked status)
-      // => do not just render again.
-    // - find & edit location with changes applied to the rest of weather information
-  // 3. weekly weather slot.
-  //   - stress the current selected weather slot
-  //   - select weather slot with changes applied to the rest of weather information
-  // 4. regular update every certain minute or time.
-  //   - give a user right to change for that
-*/
 class HeaderWeatherView extends View {
   _parentElement = document.querySelector(".header-right");
 
