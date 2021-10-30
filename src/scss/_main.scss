@@ -122,14 +122,20 @@
     justify-content: center;
     align-items: center;
 
-    .focus-heading {
-      font-size: 2.5rem;
-    }
     .focus {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+    }
+
+    .focus-input-container {
+      display: flex;
+      transition: opacity ease 1s;
+
+      .focus-heading {
+        font-size: 2.5rem;
+      }
 
       form {
         width: 100%;
@@ -144,6 +150,12 @@
         font-size: 2.5rem;
         text-align: center;
       }
+    }
+
+    .focus-task-container {
+      display: flex;
+      position: absolute;
+      transition: all ease 1s;
 
       label {
         font-size: 1.5rem;
@@ -151,7 +163,7 @@
         letter-spacing: 1.2px;
       }
 
-      &-task {
+      .focus-task {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -165,7 +177,6 @@
 
         &-content {
           margin: 0 15px;
-          // text-decoration: line-through;
         }
 
         .focus-settings {
@@ -176,6 +187,7 @@
           }
 
           &-modal-container {
+            display: none;
           }
 
           &-modal-arrow-up {
