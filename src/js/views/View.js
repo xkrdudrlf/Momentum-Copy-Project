@@ -72,6 +72,5 @@ export default class View {
     `;
   }
 
-  // update(data) {}
   // renderError(message = this._errorMessage) {}
 }

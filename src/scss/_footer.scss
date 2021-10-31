@@ -7,13 +7,20 @@
   }
   &-center {
     flex: 2;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    .quote-writer {
+      transition: 0.5s ease;
+      opacity: 0;
+      z-index: -1;
+    }
+
     .quote {
       font-size: 1.2rem;
-      transition: 1s ease;
-      &:hover {
-        transform: translateY(-30px);
-      }
+      transition: 0.5s ease;
     }
   }
   &-right {

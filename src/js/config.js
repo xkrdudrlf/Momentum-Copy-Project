@@ -25,3 +25,9 @@ export const MAPBOX_API_KEY =
   "pk.eyJ1IjoieGtyZHVkcmxmIiwiYSI6ImNrZ3ZqOGoydjAwdzcycHF0cDdmaDQweDgifQ.GcqzClyyzty9f-8OoMrchQ";
 
 export const WEATHER_UPDATE_INTERVAL = 30 * 60 * 1000; // 30 mins
+
+export const RAKUTEN_RAPID_API_KEY =
+  "b99727858emsh52139bd953c6acfp1d1dfbjsn0fd95a98b284";
+export const RAKUTEN_RAPID_API_HOST = "quotes15.p.rapidapi.com";
+export const RANDOM_QUOTE_API_ADDR =
+  "https://quotes15.p.rapidapi.com/quotes/random/";

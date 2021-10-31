@@ -8,9 +8,6 @@ class MainFocusInputView extends View {
     if (this._data.mode !== "input") {
       this._parentElement.style.display = "none";
       this._parentElement.style.opacity = 0;
-      setTimeout(() => {
-        this._parentElement.style.display = "flex";
-      }, 1000);
     }
   }
 
@@ -26,6 +23,7 @@ class MainFocusInputView extends View {
   }
 
   display(updatedFocusTask) {
+    this._parentElement.style.display = "flex";
     this._parentElement.style.opacity = 1;
     const focusInput = this._parentElement.querySelector("#focus-input");
     focusInput.value = updatedFocusTask;
@@ -33,6 +31,9 @@ class MainFocusInputView extends View {
 
   hide() {
     this._parentElement.style.opacity = 0;
+    setTimeout(() => {
+      this._parentElement.style.display = "none";
+    }, 1000);
   }
 
   _generateMarkup() {

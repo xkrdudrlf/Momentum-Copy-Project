@@ -9,9 +9,6 @@ class MainFocusTaskView extends View {
     if (this._data.mode !== "task") {
       this._parentElement.style.display = "none";
       this._parentElement.style.opacity = 0;
-      setTimeout(() => {
-        this._parentElement.style.display = "flex";
-      }, 1000);
     }
 
     this._addHandlerTaskCheckbox();
@@ -74,6 +71,7 @@ class MainFocusTaskView extends View {
   }
 
   display(updatedFocusTask) {
+    this._parentElement.style.display = "flex";
     this._parentElement.style.opacity = 1;
     const focusTaskContent = this._parentElement.querySelector(
       ".focus-task-content"
@@ -83,6 +81,10 @@ class MainFocusTaskView extends View {
 
   hide() {
     this._parentElement.style.opacity = 0;
+
+    setTimeout(() => {
+      this._parentElement.style.display = "none";
+    }, 1000);
   }
 
   _generateMarkup() {

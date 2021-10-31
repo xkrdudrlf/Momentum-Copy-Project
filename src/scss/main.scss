@@ -32,7 +32,7 @@ body {
     width: 100%;
     z-index: -1;
     background-color: black;
-    opacity: 0.15;
+    opacity: 0.25;
   }
 }
 
@@ -43,8 +43,4 @@ body {
   width: 100%;
   max-height: 1280px;
   max-width: 1920px;
-}
-
-.hidden {
-  display: none !important;
 }
