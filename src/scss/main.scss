@@ -44,3 +44,15 @@ body {
   max-height: 1280px;
   max-width: 1920px;
 }
+
+.hidden__opacity {
+  opacity: 0 !important;
+}
+
+.hidden__visibility {
+  visibility: hidden !important;
+}
+
+.hidden__none {
+  display: none !important;
+}

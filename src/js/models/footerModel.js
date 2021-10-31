@@ -6,6 +6,21 @@ export const state = {
       "It doesn't matter who you are, where you come from. The ability to triumph begins with you, Always.",
     writer: "Ophra Winfrey",
   },
+  todo: {
+    currDir: "Today", // "Today" or "Inbox" or "Done"
+    Inbox: [],
+    Today: [],
+    Done: [],
+  },
+};
+
+export const addItem = function (newItem) {
+  const item = {
+    checked: false,
+    name: newItem,
+  };
+
+  state.todo[state.todo.currDir].push(item);
 };
 
 export const getQuote = async function () {
@@ -25,4 +40,8 @@ export const getQuote = async function () {
   } catch (err) {
     console.error(err);
   }
+};
+
+export const switchCategory = function (newCategory) {
+  state.todo.currDir = newCategory;
 };

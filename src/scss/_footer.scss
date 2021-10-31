@@ -6,7 +6,7 @@
     flex: 1;
   }
   &-center {
-    flex: 2;
+    flex: 2.5;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -25,10 +25,161 @@
   }
   &-right {
     flex: 1;
+    position: relative;
     display: flex;
     justify-content: end;
     align-items: center;
     padding-right: 20px;
     font-size: 1.3rem;
+  }
+
+  .todo-modal {
+    position: absolute;
+    top: -250px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    // height: 250px;
+    width: 330px;
+    border-radius: 5px;
+    background-color: $modal-bg-color;
+    .todo-category {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 25px 20px;
+      cursor: pointer;
+      span {
+        font-size: 1.35rem;
+      }
+      i {
+        @include settingsBtn;
+        font-size: 0.9rem;
+        margin-left: 5px;
+      }
+      .todo-category-modal {
+        @include submodal(column, 60px, 0, 0, 0);
+        width: 250px;
+        font-size: 1.05rem;
+
+        &:after {
+          @include arrow-up(top, left, -10px, 20px);
+          border-bottom-color: $submodal-bg-color;
+        }
+        div {
+          @include submodal-item;
+          color: $modal-main-color;
+          padding: 6px 13px;
+          span {
+            margin-left: 8px;
+            color: $modal-secondary-color;
+            font-size: inherit;
+          }
+        }
+      }
+    }
+    .todo-content {
+      display: flex;
+      flex-direction: column;
+      .todo-content-default {
+        height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .main-text {
+          font-size: 1.2rem;
+          margin: 5px 0;
+          color: $modal-main-color;
+        }
+        .sub-text {
+          font-size: 1.05rem;
+          color: $modal-secondary-color;
+          cursor: pointer;
+          &:hover {
+            color: rgb(225, 225, 225);
+            i {
+              color: rgb(225, 225, 225);
+            }
+          }
+          i {
+            color: $modal-secondary-color;
+            font-size: 0.7rem;
+            margin-left: 3px;
+          }
+        }
+        .todo-add-item {
+          margin: 15px;
+          height: 33px;
+          width: 120px;
+          font-size: 0.95rem;
+          border: none;
+          border-radius: 30px;
+          cursor: pointer;
+          background-color: rgb(124, 124, 194);
+          transition: all 0.3s ease;
+          &:hover {
+            background-color: rgb(114, 114, 202);
+          }
+        }
+      }
+
+      .todo-content-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.1rem;
+        padding: 5px 20px;
+        &-left {
+          display: flex;
+          width: 260px;
+          input {
+            overflow: visible;
+            margin-right: 5px;
+          }
+        }
+
+        &-right {
+          display: flex;
+          overflow: visible;
+          .todo-item-settings-modal {
+            display: none;
+            position: absolute;
+            right: 50px;
+            width: 130px;
+            padding: 5px 0;
+            border-radius: 5px;
+            background-color: $submodal-bg-color;
+            div {
+              font-size: 1rem;
+              padding: 5px 10px;
+              cursor: pointer;
+              &:hover {
+                background-color: $submodal-hover-color;
+              }
+            }
+          }
+          &:after {
+            display: none;
+            content: "";
+            height: 125px;
+          }
+
+          .todo-item-settings {
+            @include settingsBtn;
+            font-size: 12px;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .todo-input {
+        color: rgb(225, 225, 225);
+        font-size: 1.1rem;
+        padding: 10px 20px;
+        background: none;
+        border: none;
+        outline-style: none;
+      }
+    }
   }
 }

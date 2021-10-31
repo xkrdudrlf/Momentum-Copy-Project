@@ -18,7 +18,6 @@ export default class View {
     const curElements = Array.from(this._parentElement.querySelectorAll("*"));
     newElements.forEach((newEl, i) => {
       const curEl = curElements[i];
-
       // Update Changed Texts
       if (
         !newEl.isEqualNode(curEl) &&
