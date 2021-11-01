@@ -13,12 +13,16 @@ const controlFooterTodoModal = function () {
 
 const controlSwitchCategory = function (newCategory) {
   model.switchCategory(newCategory);
+  footerTodoModalView.update(model.state);
+};
+
+const controlAddItem = function (newItem) {
+  model.addItem(newItem);
   return model.state;
 };
 
-const controlAddItem = function (newItem = "new Item") {
-  model.addItem(newItem);
-  return model.state;
+const controlUpdateItem = function (updatedItem) {
+  model.updateItem(updatedItem);
 };
 
 export const init = function () {
@@ -27,4 +31,6 @@ export const init = function () {
   footerTodoModalView.addHanlderSwitchCategory(controlSwitchCategory);
   footerTodoModalView.addHandlerCategoryDropdown(controlSwitchCategory);
   footerTodoModalView.addHandlerAddItem(controlAddItem);
+  footerTodoModalView.addHandlerItemCheckbox(controlUpdateItem);
+  footerTodoModalView.addHandlerUpdateItem(controlUpdateItem);
 };

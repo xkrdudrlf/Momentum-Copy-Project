@@ -2,73 +2,103 @@ import View from "./View";
 
 class FooterTodoModalView extends View {
   _parentElement = document.querySelector(".todo-modal");
+  _currDir;
+  _defaultContent;
+  _mainText;
+  _subText;
+  _addItemBtn;
+  _itemContainer;
+  _todoInput;
 
   addHandlerRender(handler) {
     handler();
+    this._setChangingElements();
     this._addHandlerAddItemBtn();
+    this._addHandlerTodoItemSettings();
   }
 
-  // Evidence of necesssity ro the further modularization
-  _updateSwitchCategory() {
-    /*
-      Update 6 things for the Category Change
-      1. currDir
-      2. length for 3 categories
-      3. todo-content-default-display
-      4. mainText, subText
-      4-1. addItemBtn
-      5. Items
-      6. input Display
-    */
-    const currDir = this._parentElement.querySelector(".currDir");
-    currDir.textContent = this._data.todo.currDir;
+  // prettier-ignore
+  addHandlerUpdateItem(handler) {
+    // [Edit] Enable todoEditInput & Hide todoItemSettings Modal
+    this._parentElement.addEventListener("click", (e) => {
+      if (e.target.classList.contains("edit")) {
+        const todoContentItem = e.target.closest(".todo-content-item");
+        const settingsModalOverlay = todoContentItem.querySelector(".todo-item-settings-modal-overlay");
+        const [todoSpan, todoEditInput] = todoContentItem.querySelector("form").children;
+        e.target.parentElement.style.display = "none";
+        settingsModalOverlay.style.display = "none";
 
-    const categories = this._parentElement
-      .querySelector(".todo-category-modal")
-      .querySelectorAll("div");
-    categories[0].querySelector("span").textContent =
-      this._data.todo.Inbox.length;
-    categories[1].querySelector("span").textContent =
-      this._data.todo.Today.length;
-    categories[2].querySelector("span").textContent =
-      this._data.todo.Done.length;
-
-    const defaultContent = this._parentElement.querySelector(
-      ".todo-content-default"
-    );
-    if (this._getCurrCategory().length > 0) {
-      if (!defaultContent.classList.contains("hidden__none"))
-        defaultContent.classList.add("hidden__none");
-    } else {
-      if (defaultContent.classList.contains("hidden__none"))
-        defaultContent.classList.remove("hidden__none");
-    }
-
-    const mainText = this._parentElement.querySelector(".main-text");
-    mainText.textContent = this._getMaintext();
-    const subText = this._parentElement.querySelector(".sub-text");
-    subText.textContent = this._getSubtext();
-
-    const addItemBtn = this._parentElement.querySelector(".todo-add-item");
-    if (this._getCurrCategory().length === 0) {
-      if (addItemBtn.classList.contains("hidden__opacity")) {
-        addItemBtn.classList.remove("hidden__opacity");
+        todoSpan.style.visibility = "hidden";
+        todoEditInput.style.visibility = "visible";
+        todoEditInput.disabled = false;
+        todoEditInput.focus();
       }
-    }
+    });
 
-    const itemContainer = this._parentElement.querySelector(
-      ".todo-item-container"
-    );
-    itemContainer.innerHTML = this._generateMarkupAllItems();
+    // [Submit] Disable todoEditInput on Focusout
+    this._parentElement.addEventListener("focusout", (e) => {
+      if (e.target.type === "text" && !e.target.classList.contains("todo-input")) {
+        const todoEditInput = e.target; 
+        todoEditInput.style.visibility = "hidden";
+        todoEditInput.disabled = true;
 
-    const todoInput = this._parentElement.querySelector(".todo-input");
-    if (this._getCurrCategory().length > 0) {
-      if (todoInput.classList.contains("hidden__visibility"))
-        todoInput.classList.remove("hidden__visibility");
-    } else {
-      if (!todoInput.classList.contains("hidden__visibility"))
-        todoInput.classList.add("hidden__visibility");
-    }
+        const todoSpan = todoEditInput.previousElementSibling;
+        todoSpan.textContent = todoEditInput.value;
+        todoSpan.style.visibility = "visible";
+
+        const updatedItem = {
+          checked: this._getCurrCategory()[e.target.dataset.id].checked,
+          name: todoSpan.textContent,
+          id: e.target.dataset.id,
+        };
+
+        handler(updatedItem);
+      }
+    });
+
+    // [Submit] Disable todoEditInput on form submit
+    this._parentElement.addEventListener("submit", (e) => {
+      if (e.target.closest(".todo-item-container")) {
+        e.preventDefault();
+        const todoEditInput = e.target.querySelector("input");
+        todoEditInput.style.visibility = "hidden";
+        todoEditInput.disabled = true;
+
+        const todoSpan = todoEditInput.previousElementSibling;
+        todoSpan.textContent = todoEditInput.value;
+        todoSpan.style.visibility = "visible";
+
+        const updatedItem = {
+          checked: this._getCurrCategory()[todoEditInput.dataset.id].checked,
+          name: todoSpan.textContent,
+          id: todoEditInput.dataset.id,
+        };
+
+        handler(updatedItem);
+      }
+    });
+  }
+
+  _addHandlerTodoItemSettings() {
+    this._parentElement.addEventListener("click", (e) => {
+      if (e.target.classList.contains("todo-item-settings")) {
+        const todoItemSettingsModal = e.target.previousElementSibling;
+        const modalOverlay = e.target.nextElementSibling;
+        if (todoItemSettingsModal.style.display === "block") {
+          todoItemSettingsModal.style.display = "none";
+          modalOverlay.style.display = "none";
+        } else {
+          this._parentElement
+            .querySelectorAll(".todo-item-settings")
+            .forEach((el) => {
+              el.previousElementSibling.style.display = "none";
+              el.nextElementSibling.style.display = "none";
+            });
+          todoItemSettingsModal.style.display = "block";
+          modalOverlay.style.display = "block";
+        }
+      }
+    });
   }
 
   addHanlderSwitchCategory(handler) {
@@ -76,9 +106,7 @@ class FooterTodoModalView extends View {
       if (e.target.closest(".sub-text")) {
         let newCategory = "Today";
         if (this._data.todo.currDir === "Today") newCategory = "Inbox";
-        this._data = handler(newCategory);
-        this._updateSwitchCategory();
-        return;
+        handler(newCategory);
       }
     });
   }
@@ -91,57 +119,127 @@ class FooterTodoModalView extends View {
       if (e.target.closest(".todo-category")) {
         if (getComputedStyle(todoCategoryModal).display !== "flex") {
           todoCategoryModal.style.display = "flex";
-          return;
+        } else {
+          todoCategoryModal.style.display = "none";
+          let newCategory = e.target.dataset.category;
+          if (newCategory) handler(newCategory);
         }
-        todoCategoryModal.style.display = "none";
-        let newCategory = e.target.dataset.category;
-        if (!newCategory) return;
-        this._data = handler(newCategory);
-        this._updateSwitchCategory();
-        return;
       }
     });
   }
 
-  // Add, delete, move, edit
   addHandlerAddItem(handler) {
-    const todoContentDefault = this._parentElement.querySelector(
-      ".todo-content-default"
-    );
-    const itemContainer = this._parentElement.querySelector(
-      ".todo-item-container"
-    );
-
-    this._parentElement.addEventListener("submit", (e) => {
+    const addItemInputForm = this._todoInput.closest("form");
+    addItemInputForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const newItemInput = e.target.elements["newItem"];
       const newItemInputValue = newItemInput.value;
       newItemInput.value = "";
       this._data = handler(newItemInputValue);
 
-      if (!todoContentDefault.classList.contains("hidden__none")) {
-        todoContentDefault.classList.add("hidden__none");
+      if (!this._defaultContent.classList.contains("hidden__none")) {
+        this._defaultContent.classList.add("hidden__none");
       }
 
-      const newItem = {
-        checked: false,
-        name: newItemInputValue,
-      };
+      const newItem =
+        this._getCurrCategory()[this._getCurrCategory().length - 1];
       const itemMarkup = this._generateMarkupItem(newItem);
-      itemContainer.insertAdjacentHTML("beforeend", itemMarkup);
+      this._itemContainer.insertAdjacentHTML("beforeend", itemMarkup);
     });
+  }
+
+  addHandlerItemCheckbox(handler) {
+    this._parentElement.addEventListener("click", (e) => {
+      if (e.target.type === "checkbox") {
+        const itemContent = e.target.closest(".todo-content-item-left");
+        if (e.target.checked) {
+          itemContent.style.textDecoration = "line-through";
+        } else {
+          itemContent.style.textDecoration = "";
+        }
+
+        const updatedItem = {
+          checked: e.target.checked,
+          name: itemContent.textContent,
+          id: e.target.dataset.id,
+        };
+
+        handler(updatedItem);
+      }
+    });
+  }
+
+  update(data) {
+    this._data = data;
+    // 1. Update currDir
+    this._currDir.textContent = this._data.todo.currDir;
+
+    // 2. Update lengths of categories
+    this._categories[0].querySelector("span").textContent =
+      this._data.todo.Inbox.length;
+    this._categories[1].querySelector("span").textContent =
+      this._data.todo.Today.length;
+    this._categories[2].querySelector("span").textContent =
+      this._data.todo.Done.length;
+
+    // 3. Update display of todo-content-default
+    if (this._getCurrCategory().length > 0) {
+      if (!this._defaultContent.classList.contains("hidden__none"))
+        this._defaultContent.classList.add("hidden__none");
+    } else {
+      if (this._defaultContent.classList.contains("hidden__none"))
+        this._defaultContent.classList.remove("hidden__none");
+    }
+
+    // 4. Update mainText & subText
+    this._mainText.textContent = this._getMaintext();
+    this._subText.textContent = this._getSubtext();
+
+    // 5. Update addItemBtn
+    if (this._getCurrCategory().length === 0) {
+      if (this._addItemBtn.classList.contains("hidden__opacity")) {
+        this._addItemBtn.classList.remove("hidden__opacity");
+      }
+    }
+
+    // 6. Update todoItems
+    this._itemContainer.innerHTML = this._generateMarkupAllItems();
+
+    // 7. Update display of todoInput
+    if (this._getCurrCategory().length > 0) {
+      if (this._todoInput.classList.contains("hidden__visibility"))
+        this._todoInput.classList.remove("hidden__visibility");
+    } else {
+      if (!this._todoInput.classList.contains("hidden__visibility"))
+        this._todoInput.classList.add("hidden__visibility");
+    }
   }
 
   // prettier-ignore
   _addHandlerAddItemBtn() {
-    const todoAddItemBtn = this._parentElement.querySelector(".todo-add-item");
-    const todoInput = this._parentElement.querySelector(".todo-input");
     this._parentElement.addEventListener("click", (e) => {
-      if (e.target === todoAddItemBtn) {
-        todoAddItemBtn.classList.add("hidden__opacity");
-        todoInput.classList.remove("hidden__visibility");
+      if (e.target === this._addItemBtn) {
+        this._addItemBtn.classList.add("hidden__opacity");
+        this._todoInput.classList.remove("hidden__visibility");
       }
     });
+  }
+
+  _setChangingElements() {
+    this._currDir = this._parentElement.querySelector(".currDir");
+    this._categories = this._parentElement
+      .querySelector(".todo-category-modal")
+      .querySelectorAll("div");
+    this._defaultContent = this._parentElement.querySelector(
+      ".todo-content-default"
+    );
+    this._mainText = this._parentElement.querySelector(".main-text");
+    this._subText = this._parentElement.querySelector(".sub-text");
+    this._addItemBtn = this._parentElement.querySelector(".todo-add-item");
+    this._itemContainer = this._parentElement.querySelector(
+      ".todo-item-container"
+    );
+    this._todoInput = this._parentElement.querySelector(".todo-input");
   }
 
   // prettier-ignore
@@ -174,14 +272,20 @@ class FooterTodoModalView extends View {
           <button class="todo-add-item">New Todo</button>
         </div>
         <div class="todo-item-container">${this._generateMarkupAllItems()}</div>
-        <form class="todo-input-form">
+        <form>
           <input class="todo-input ${this._getCurrCategory().length > 0 ? "" : "hidden__visibility"}" 
                 type="text"
                 name="newItem" 
-                placeholder="New Todo" />
+                placeholder="New Todo"
+                autocomplete="off"
+          />
         </form>
       </div>
     `;
+  }
+
+  _getCurrCategory() {
+    return this._data.todo[this._data.todo.currDir];
   }
 
   _getMaintext() {
@@ -208,16 +312,12 @@ class FooterTodoModalView extends View {
       if (this._data.todo.Inbox.length === 0) {
         subText = "Switch to Inbox";
       } else {
-        subText = `${this._data.Inbox.length} todo in Inbox`;
+        subText = `${this._data.todo.Inbox.length} todo in Inbox`;
       }
     } else {
       subText = "Get started in Today";
     }
     return subText;
-  }
-
-  _getCurrCategory() {
-    return this._data.todo[this._data.todo.currDir];
   }
 
   _generateMarkupAllItems() {
@@ -228,19 +328,34 @@ class FooterTodoModalView extends View {
 
   _generateMarkupItem(itemData) {
     return `
-      <div class="todo-content-item">
+      <div class="todo-content-item" >
         <div class="todo-content-item-left">
-          <input type="checkbox" ${itemData.checked ? "checked" : ""}/>
-          ${itemData.name}
+          <input type="checkbox" 
+                 ${itemData.checked ? "checked" : ""}
+                 data-id="${itemData.id}"
+          />
+          <form>
+            <span style="text-decoration: ${
+              itemData.checked ? "line-through" : ""
+            }">
+              ${itemData.name}
+            </span>
+            <input type="text" 
+                   value="${itemData.name}"
+                   data-id="${itemData.id}" 
+                   disabled>
+          </form>
         </div>
         <span class="todo-content-item-right">
-          <div class="todo-item-settings-modal">
+          <div class="todo-item-settings-modal"
+               data-id="${itemData.id}">
             <div class="edit">Edit</div>
             <div class="moveToToday">Move to Today</div>
             <div class="moveToOther">Move to...</div>
             <div class="delete">Delete</div>
           </div>
           <i class="fas fa-ellipsis-h todo-item-settings"></i>
+          <div class="todo-item-settings-modal-overlay"></div>
         </span>
       </div>
     `;

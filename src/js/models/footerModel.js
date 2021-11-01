@@ -18,9 +18,17 @@ export const addItem = function (newItem) {
   const item = {
     checked: false,
     name: newItem,
+    id: state.todo[state.todo.currDir].length,
   };
 
   state.todo[state.todo.currDir].push(item);
+};
+
+export const updateItem = function (updatedItem) {
+  const itemToUpdate = state.todo[state.todo.currDir][updatedItem.id];
+  itemToUpdate.checked = updatedItem.checked;
+  itemToUpdate.name = updatedItem.name;
+  console.log(state.todo);
 };
 
 export const getQuote = async function () {

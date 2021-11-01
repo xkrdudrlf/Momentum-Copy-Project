@@ -34,12 +34,11 @@
   }
 
   .todo-modal {
-    position: absolute;
-    top: -250px;
+    position: fixed;
+    bottom: 60px;
     right: 30px;
     display: flex;
     flex-direction: column;
-    // height: 250px;
     width: 330px;
     border-radius: 5px;
     background-color: $modal-bg-color;
@@ -132,9 +131,20 @@
         &-left {
           display: flex;
           width: 260px;
-          input {
+          input[type="checkbox"] {
             overflow: visible;
-            margin-right: 5px;
+            margin-right: 10px;
+            align-self: center;
+          }
+          form {
+            position: relative;
+          }
+          input[type="text"] {
+            @include input;
+            visibility: hidden;
+            font-size: 1rem;
+            position: absolute;
+            left: 0;
           }
         }
 
@@ -158,16 +168,19 @@
               }
             }
           }
-          &:after {
-            display: none;
-            content: "";
-            height: 125px;
-          }
 
           .todo-item-settings {
             @include settingsBtn;
+            height: 25px;
             font-size: 12px;
             cursor: pointer;
+          }
+
+          .todo-item-settings-modal-overlay {
+            display: none;
+            content: "";
+            height: 125px;
+            z-index: -1;
           }
         }
       }
