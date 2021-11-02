@@ -28,7 +28,27 @@ export const updateItem = function (updatedItem) {
   const itemToUpdate = state.todo[state.todo.currDir][updatedItem.id];
   itemToUpdate.checked = updatedItem.checked;
   itemToUpdate.name = updatedItem.name;
-  console.log(state.todo);
+};
+
+export const deleteItem = function (itemId) {
+  const currDir = state.todo[state.todo.currDir];
+  currDir.forEach((item, i) => {
+    if (i >= itemId && i + 1 < currDir.length) {
+      item.checked = currDir[i + 1].checked;
+      item.name = currDir[i + 1].name;
+    }
+  });
+  currDir.pop();
+};
+
+export const moveItem = function (destCategory, itemId) {
+  const currDir = state.todo[state.todo.currDir];
+  const itemToMove = { ...currDir[itemId] };
+
+  deleteItem(itemId);
+
+  itemToMove.id = state.todo[destCategory].length;
+  state.todo[destCategory].push(itemToMove);
 };
 
 export const getQuote = async function () {

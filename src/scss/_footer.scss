@@ -60,11 +60,13 @@
         @include submodal(column, 60px, 0, 0, 0);
         width: 250px;
         font-size: 1.05rem;
+        z-index: 2;
 
         &:after {
           @include arrow-up(top, left, -10px, 20px);
           border-bottom-color: $submodal-bg-color;
         }
+
         div {
           @include submodal-item;
           color: $modal-main-color;
@@ -75,6 +77,11 @@
             font-size: inherit;
           }
         }
+      }
+      &:after {
+        content: "";
+        clear: both;
+        display: block;
       }
     }
     .todo-content {

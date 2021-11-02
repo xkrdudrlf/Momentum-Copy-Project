@@ -25,6 +25,16 @@ const controlUpdateItem = function (updatedItem) {
   model.updateItem(updatedItem);
 };
 
+const controlDeleteItem = function (itemId) {
+  model.deleteItem(itemId);
+  footerTodoModalView.update(model.state);
+};
+
+const controlMoveItem = function (destCategory, itemId) {
+  model.moveItem(destCategory, itemId);
+  footerTodoModalView.update(model.state);
+};
+
 export const init = function () {
   footerQuoteView.addHandlerRender(controlFooterQuote);
   footerTodoModalView.addHandlerRender(controlFooterTodoModal);
@@ -33,4 +43,6 @@ export const init = function () {
   footerTodoModalView.addHandlerAddItem(controlAddItem);
   footerTodoModalView.addHandlerItemCheckbox(controlUpdateItem);
   footerTodoModalView.addHandlerUpdateItem(controlUpdateItem);
+  footerTodoModalView.addHandlerDeleteItem(controlDeleteItem);
+  footerTodoModalView.addHandlerMoveItem(controlMoveItem);
 };
