@@ -22,12 +22,21 @@ export const addItem = function (newItem) {
   };
 
   state.todo[state.todo.currDir].push(item);
+  localStorage.setItem(
+    state.todo.currDir,
+    JSON.stringify(state.todo[state.todo.currDir])
+  );
 };
 
 export const updateItem = function (updatedItem) {
   const itemToUpdate = state.todo[state.todo.currDir][updatedItem.id];
   itemToUpdate.checked = updatedItem.checked;
   itemToUpdate.name = updatedItem.name;
+
+  localStorage.setItem(
+    state.todo.currDir,
+    JSON.stringify(state.todo[state.todo.currDir])
+  );
 };
 
 export const deleteItem = function (itemId) {
@@ -39,6 +48,11 @@ export const deleteItem = function (itemId) {
     }
   });
   currDir.pop();
+
+  localStorage.setItem(
+    state.todo.currDir,
+    JSON.stringify(state.todo[state.todo.currDir])
+  );
 };
 
 export const moveItem = function (destCategory, itemId) {
@@ -49,6 +63,12 @@ export const moveItem = function (destCategory, itemId) {
 
   itemToMove.id = state.todo[destCategory].length;
   state.todo[destCategory].push(itemToMove);
+
+  localStorage.setItem(
+    state.todo.currDir,
+    JSON.stringify(state.todo[state.todo.currDir])
+  );
+  localStorage.setItem(destCategory, JSON.stringify(state.todo[destCategory]));
 };
 
 export const getQuote = async function () {
@@ -60,9 +80,12 @@ export const getQuote = async function () {
         "x-rapidapi-host": `${config.RAKUTEN_RAPID_API_HOST}`,
       },
     };
-    const res = await fetch(`${config.RANDOM_QUOTE_API_ADDR}`, header);
-    const data = await res.json();
-
+    let res, data;
+    while (true) {
+      res = await fetch(`${config.RANDOM_QUOTE_API_ADDR}`, header);
+      data = await res.json();
+      if (data.content.length <= 100) break;
+    }
     state.quote.content = data.content;
     state.quote.writer = data.originator.name;
   } catch (err) {
@@ -73,3 +96,11 @@ export const getQuote = async function () {
 export const switchCategory = function (newCategory) {
   state.todo.currDir = newCategory;
 };
+
+const init = function () {
+  state.todo.Inbox = JSON.parse(localStorage.getItem("Inbox")) ?? [];
+  state.todo.Today = JSON.parse(localStorage.getItem("Today")) ?? [];
+  state.todo.Done = JSON.parse(localStorage.getItem("Done")) ?? [];
+};
+
+init();

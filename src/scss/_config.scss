@@ -73,11 +73,13 @@ $submodal-hover-color: $hover-color-heavy;
   }
 }
 
-@mixin input {
+@mixin input($font-size: 1.2rem) {
   background: none;
   border: none;
   outline-style: none;
-  font-size: 1.2rem;
+  @if $font-size == 1.2rem {
+    font-size: $font-size;
+  }
 }
 
 @mixin settingsBtn {

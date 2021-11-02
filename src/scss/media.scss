@@ -1,0 +1,156 @@
+$screen-xl-min: 1250px;
+$screen-lg-min: 950px;
+$screen-md-min: 685px;
+$screen-sm-min: 375px;
+
+@mixin xl {
+  @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: #{$screen-lg-min}) and (max-width: #{$screen-xl-min - 1px}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: #{$screen-md-min}) and (max-width: #{$screen-lg-min - 1px}) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (min-width: #{$screen-sm-min}) and (max-width: #{$screen-md-min - 1px}) {
+    @content;
+  }
+}
+
+@include xl {
+  // Main
+  .name-settings-modal {
+    left: 5px;
+  }
+
+  .time {
+    font-size: 10rem;
+  }
+
+  .greeting-message,
+  #username-container,
+  #username {
+    font-size: 3.5rem;
+  }
+
+  #username-container,
+  #username-form {
+    max-width: 550px;
+  }
+
+  .focus-heading,
+  .focus-task-content,
+  #focus-input {
+    font-size: 2.5rem;
+  }
+
+  .focus-task-content {
+    max-width: 1000px;
+  }
+}
+
+@include lg {
+  // Main
+  .name-settings-modal {
+    left: -100px;
+  }
+
+  .time {
+    font-size: 9rem;
+  }
+
+  .greeting-message,
+  #username-container,
+  #username {
+    font-size: 3rem;
+  }
+
+  #username-container,
+  #username-form {
+    max-width: 500px;
+  }
+
+  .focus-heading,
+  .focus-task-content,
+  #focus-input {
+    font-size: 2.5rem;
+  }
+
+  .focus-task-content {
+    max-width: 700px;
+  }
+}
+
+@include md {
+  // Main
+  .name-settings-modal {
+    left: -100px;
+  }
+
+  .time {
+    font-size: 7rem;
+  }
+
+  .greeting-message,
+  #username-container,
+  #username {
+    font-size: 2.3rem;
+  }
+
+  #username-container,
+  #username-form {
+    max-width: 330px;
+  }
+
+  .focus-heading,
+  .focus-task-content,
+  #focus-input {
+    font-size: 2rem;
+  }
+
+  .focus-task-content {
+    max-width: 450px;
+  }
+}
+
+@include sm {
+  // Main
+  .name-settings-modal {
+    left: -100px;
+  }
+
+  .time {
+    font-size: 7rem;
+  }
+
+  .greeting-message,
+  #username-container,
+  #username {
+    font-size: 2.3rem;
+  }
+
+  #username-container,
+  #username-form {
+    max-width: 330px;
+  }
+
+  .focus-heading,
+  .focus-task-content,
+  #focus-input {
+    font-size: 2rem;
+  }
+
+  .focus-task-content {
+    max-width: 450px;
+  }
+}

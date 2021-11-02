@@ -34,19 +34,17 @@ const getCurrentLocation = function () {
 
   return new Promise(async function (resolve, reject) {
     try {
-      // const res = await fetch(config.GEOLOCATION_ADDR);
+      const res = await fetch(config.GEOLOCATION_ADDR);
 
-      // if (!res.ok) {
-      //   return reject(new Error(errorMessage));
-      // }
+      if (!res.ok) {
+        return reject(new Error(errorMessage));
+      }
 
-      // const data = await res.json();
-      // state.cityName = data["city"];
-      // state.coords.latitude = data["latitude"];
-      // state.coords.longitude = data["longitude"];
-      state.cityName = "Busan";
-      state.coords.latitude = 35;
-      state.coords.longitude = 127;
+      const data = await res.json();
+      state.cityName = data["city"];
+      state.coords.latitude = data["latitude"];
+      state.coords.longitude = data["longitude"];
+
       resolve();
     } catch (err) {
       return reject(new Error(err.message));

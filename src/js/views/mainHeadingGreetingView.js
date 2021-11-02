@@ -100,9 +100,14 @@ class MainHeadingGreetingView extends MainHeadingView {
     return `
       <span class="greeting-message">
         <span id="greeting-message-time">${greetingMessage}, </span>
-        <span id="username-container"></span>
+        <div id="username-container"></div>
         <form id="username-form">
-          <input type="text" id="username" name="username" value="${this._data.username}" disabled>
+          <input type="text" 
+                 id="username" 
+                 name="username"
+                 value="${this._data.username}" 
+                 autocomplete="off"
+                 disabled>
         </form>
       </span>
       <div class="name-settings">

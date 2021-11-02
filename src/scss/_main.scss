@@ -14,10 +14,6 @@
       display: flex;
       align-items: center;
 
-      .time {
-        font-size: 10rem;
-      }
-
       .time-settings {
         visibility: hidden;
         position: relative;
@@ -55,24 +51,32 @@
       align-items: center;
 
       .greeting-message {
+        display: flex;
         position: relative;
-        font-size: 3.5rem;
+
+        #greeting-message-time {
+          margin-right: 20px;
+        }
 
         #username-container {
-          position: absolute;
+          display: flex;
           height: 100%;
           overflow: hidden;
           z-index: -1;
           opacity: 1;
+          white-space: pre;
         }
 
         #username-form {
+          position: absolute;
+          right: 0;
           display: inline;
+          overflow: hidden;
         }
 
         #username {
-          @include input;
-          font-size: 3.5rem;
+          @include input(0);
+          min-width: 20px;
           border-bottom: 3px white solid;
           opacity: 0;
         }
@@ -97,11 +101,11 @@
         &-modal {
           position: absolute;
           top: 40px;
-          left: 5px;
           width: 170px;
           padding: 5px 0;
           border-radius: $modal-std-border-radius;
           background-color: $modal-bg-color;
+
           &-item {
             display: flex;
             justify-content: space-between;
@@ -133,10 +137,6 @@
       display: flex;
       transition: opacity ease 1s;
 
-      .focus-heading {
-        font-size: 2.5rem;
-      }
-
       form {
         width: 100%;
       }
@@ -147,7 +147,6 @@
         border: none;
         border-bottom: 2.5px solid white;
         outline-style: none;
-        font-size: 2.5rem;
         text-align: center;
       }
     }
@@ -177,6 +176,7 @@
 
         &-content {
           margin: 0 15px;
+          overflow: hidden;
         }
 
         .focus-settings {

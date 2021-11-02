@@ -269,39 +269,36 @@ class FooterTodoModalView extends View {
     this._parentElement.addEventListener("click", (e) => {
       if (e.target.classList.contains("todo-item-settings")) {
         const todoItemSettingsModal = e.target.previousElementSibling;
+        const modalOverlay = e.target.nextElementSibling;
         if (todoItemSettingsModal.style.display === "block") {
           todoItemSettingsModal.style.display = "none";
+          modalOverlay.style.display = "none";
           this._openSettingsModal = null;
+          this._openSettingsModalOverlay = null;
         } else {
-          if (this._openSettingsModal) {
+          if (this._openSettingsModal && this._openSettingsModalOverlay) {
             this._openSettingsModal.style.display = "none";
+            this._openSettingsModalOverlay.style.display = "none";
           }
-          // START FROM HERE
+
           const todoContentItem = e.target.closest(".todo-content-item");
           const inputTop = this._todoInput.getBoundingClientRect().top;
           const settingsModalHeight = getComputedStyle(
             todoItemSettingsModal
           ).height.split("px")[0];
           const settingsModalBtm = e.target.getBoundingClientRect().bottom;
-          console.log();
+
           if (inputTop - settingsModalBtm >= settingsModalHeight) {
             todoContentItem.style.height =
               getComputedStyle(todoContentItem).height;
-            todoItemSettingsModal.style.top = "30px";
-            todoItemSettingsModal.style.right = "0px";
+            todoItemSettingsModal.style.top = "5px";
           } else {
-            if (this._itemContainer.getBoundingClientRect().height < 130) {
-              this._itemContainer.style.height = "170px";
-              todoItemSettingsModal.style.top = "30px";
-              todoItemSettingsModal.style.right = "0px";
-            } else {
-              todoItemSettingsModal.style.top = "-100px";
-              todoItemSettingsModal.style.right = "40px";
-            }
           }
 
           todoItemSettingsModal.style.display = "block";
+          modalOverlay.style.display = "block";
           this._openSettingsModal = todoItemSettingsModal;
+          this._openSettingsModalOverlay = modalOverlay;
         }
       }
     });
@@ -469,6 +466,7 @@ class FooterTodoModalView extends View {
             <div class="delete">Delete</div>
           </div>
           <i class="fas fa-ellipsis-h todo-item-settings"></i>
+          <div class="todo-item-settings-modal-overlay"></div>
         </span>
       </div>
     `;

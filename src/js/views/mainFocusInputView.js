@@ -42,7 +42,12 @@ class MainFocusInputView extends View {
         What is your main focus for today?
       </span>
       <form>
-        <input type="text" name="focus" id="focus-input" value="${this._data.focusTask}"/>
+        <input type="text" 
+               name="focus" 
+               id="focus-input" 
+               value="${this._data.focusTask}"
+               autocomplete="off"
+        />
       </form>
     `;
   }

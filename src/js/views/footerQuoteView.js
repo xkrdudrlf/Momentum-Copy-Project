@@ -10,8 +10,18 @@ class FooterQuoteView extends View {
     const quote = this._parentElement.querySelector(".quote");
 
     this._parentElement.addEventListener("mouseenter", () => {
-      quote.style.transform = "translateY(-1rem)";
-      quoteWriter.style.transform = "translateY(1.8rem)";
+      let quoteMove = "-1rem";
+      let quoteWriterMove = "1.8rem";
+      const quoteHeight = getComputedStyle(quote).height.split("px")[0];
+      if (quoteHeight > 64) {
+        quoteMove = "-3rem";
+        quoteWriterMove = "3rem";
+      } else if (quoteHeight > 22) {
+        quoteMove = "-2rem";
+        quoteWriterMove = "2rem";
+      }
+      quote.style.transform = `translateY(${quoteMove})`;
+      quoteWriter.style.transform = `translateY(${quoteWriterMove})`; // 1.8rem/ 3rem
       quoteWriter.style.opacity = 1;
     });
 

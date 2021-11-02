@@ -1,6 +1,6 @@
 .footer {
   display: flex;
-  height: 60px;
+  height: 100px;
   width: 100%;
   &-left {
     flex: 1;
@@ -9,7 +9,7 @@
     flex: 2.5;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 
     .quote-writer {
@@ -31,17 +31,24 @@
     align-items: center;
     padding-right: 20px;
     font-size: 1.3rem;
+    .todo-btn {
+      background: none;
+      font-size: 1.3rem;
+      border: none;
+      cursor: pointer;
+    }
   }
 
   .todo-modal {
     position: fixed;
-    bottom: 60px;
+    bottom: 70px;
     right: 30px;
-    display: flex;
+    display: none;
     flex-direction: column;
     width: 330px;
     border-radius: 5px;
     background-color: $modal-bg-color;
+
     .todo-category {
       height: 50px;
       display: flex;
@@ -87,6 +94,7 @@
     .todo-content {
       display: flex;
       flex-direction: column;
+
       .todo-content-default {
         height: 160px;
         display: flex;
@@ -130,6 +138,11 @@
         }
       }
 
+      .todo-item-container {
+        max-height: 360px;
+        overflow: auto;
+      }
+
       .todo-content-item {
         display: flex;
         justify-content: space-between;
@@ -146,6 +159,14 @@
           form {
             position: relative;
           }
+
+          span {
+            display: block;
+            width: 235px;
+            overflow: auto;
+            overflow-wrap: break-word;
+          }
+
           input[type="text"] {
             @include input;
             visibility: hidden;
@@ -158,14 +179,18 @@
         &-right {
           display: flex;
           overflow: visible;
+          position: relative;
+
           .todo-item-settings-modal {
             display: none;
             position: absolute;
-            right: 50px;
+            // right: 50px;
+            height: 122px;
             width: 130px;
             padding: 5px 0;
             border-radius: 5px;
             background-color: $submodal-bg-color;
+            z-index: 1;
             div {
               font-size: 1rem;
               padding: 5px 10px;
