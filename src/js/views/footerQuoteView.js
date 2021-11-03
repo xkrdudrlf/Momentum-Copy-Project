@@ -4,6 +4,8 @@ class FooterQuoteView extends View {
   _parentElement = document.querySelector(".footer-center");
 
   async addHandlerRender(handler) {
+    this.renderSpinner();
+
     await handler();
 
     const quoteWriter = this._parentElement.querySelector(".quote-writer");

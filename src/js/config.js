@@ -31,3 +31,6 @@ export const RAKUTEN_RAPID_API_KEY =
 export const RAKUTEN_RAPID_API_HOST = "quotes15.p.rapidapi.com";
 export const RANDOM_QUOTE_API_ADDR =
   "https://quotes15.p.rapidapi.com/quotes/random/";
+
+// Prevents an element from having an overflow scroll getting too close
+export const OVERFLOW_BUFFER = 10;

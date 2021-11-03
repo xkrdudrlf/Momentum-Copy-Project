@@ -3,7 +3,7 @@ import footerTodoModalView from "../views/footerTodoModalView";
 import * as model from "../models/footerModel";
 
 const controlFooterQuote = async function () {
-  // await model.getQuote();
+  await model.getQuote();
   footerQuoteView.render(model.state);
 };
 

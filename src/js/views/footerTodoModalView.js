@@ -1,3 +1,4 @@
+import * as config from "../config";
 import View from "./View";
 
 class FooterTodoModalView extends View {
@@ -77,7 +78,7 @@ class FooterTodoModalView extends View {
         this._getCurrCategory()[this._getCurrCategory().length - 1];
       const itemMarkup = this._generateMarkupItem(newItem);
       this._itemContainer.insertAdjacentHTML("beforeend", itemMarkup);
-
+      this._itemContainer.style.height = "auto";
       this.update(this._data);
     });
   }
@@ -112,6 +113,7 @@ class FooterTodoModalView extends View {
 
         const destCategory = e.target.dataset.category;
         handler(destCategory, itemId);
+        this._itemContainer.style.height = "auto";
       }
     });
   }
@@ -123,6 +125,7 @@ class FooterTodoModalView extends View {
         const itemId = e.target.parentElement.dataset.id;
         todoContentItem.remove();
         handler(itemId);
+        this._itemContainer.style.height = "auto";
       }
     });
   }
@@ -268,46 +271,70 @@ class FooterTodoModalView extends View {
   _addHandlerTodoItemSettings() {
     this._parentElement.addEventListener("click", (e) => {
       if (e.target.classList.contains("todo-item-settings")) {
-        const todoItemSettingsModal = e.target.previousElementSibling;
-        if (todoItemSettingsModal.style.display === "block") {
-          todoItemSettingsModal.style.display = "none";
+        const settingsModal = e.target.previousElementSibling;
+        if (settingsModal.style.display === "block") {
+          this._positionSettingsModalClose();
+          settingsModal.style.display = "none";
           this._openSettingsModal = null;
         } else {
           if (this._openSettingsModal) {
+            this._positionSettingsModalClose();
             this._openSettingsModal.style.display = "none";
           }
-          // START FROM HERE
-          const todoContentItem = e.target.closest(".todo-content-item");
-          const inputTop = this._todoInput.getBoundingClientRect().top;
-          const settingsModalHeight = getComputedStyle(
-            todoItemSettingsModal
-          ).height.split("px")[0];
-          const settingsModalBtm = e.target.getBoundingClientRect().bottom;
-          console.log();
-          if (inputTop - settingsModalBtm >= settingsModalHeight) {
-            todoContentItem.style.height =
-              getComputedStyle(todoContentItem).height;
-            todoItemSettingsModal.style.top = "30px";
-            todoItemSettingsModal.style.right = "0px";
-          } else {
-            if (this._itemContainer.getBoundingClientRect().height < 130) {
-              this._itemContainer.style.height = "170px";
-              todoItemSettingsModal.style.top = "30px";
-              todoItemSettingsModal.style.right = "0px";
-            } else {
-              todoItemSettingsModal.style.top = "-100px";
-              todoItemSettingsModal.style.right = "40px";
-            }
-          }
-
-          todoItemSettingsModal.style.display = "block";
-          this._openSettingsModal = todoItemSettingsModal;
+          this._positionSettingsModalOpen(e.target);
         }
       }
     });
   }
 
-  _;
+  _positionSettingsModalClose() {
+    const itemContainerTop = this._itemContainer.getBoundingClientRect().top;
+    const itemContainerBtm = this._itemContainer.getBoundingClientRect().bottom;
+    const lastItemBtm =
+      this._itemContainer.lastElementChild?.getBoundingClientRect().bottom ??
+      itemContainerTop;
+    if (itemContainerBtm - lastItemBtm <= config.OVERFLOW_BUFFER) return;
+    this._itemContainer.style.height = `${
+      lastItemBtm - itemContainerTop + config.OVERFLOW_BUFFER
+    }px`;
+  }
+
+  _positionSettingsModalOpen(settingsBtn) {
+    // Display Settings Modal
+    const settingsModal = settingsBtn.previousElementSibling;
+    settingsModal.style.display = "block";
+    this._openSettingsModal = settingsModal;
+
+    // Case 1: There is enoough space for modal to strech down
+    const newTodoinputTop = this._todoInput.getBoundingClientRect().top;
+    const settingsBtnBtm = settingsBtn.getBoundingClientRect().bottom;
+    const settingsModalHeight = settingsModal.getBoundingClientRect().height;
+    if (
+      newTodoinputTop - settingsBtnBtm >=
+      settingsModalHeight + config.OVERFLOW_BUFFER
+    ) {
+      settingsModal.style.top = "30px";
+      settingsModal.style.right = "0px";
+      return;
+    }
+
+    // Case 2: There is enough space for modal to stretch up
+    const itemContainerTop = this._itemContainer.getBoundingClientRect().top;
+    if (settingsBtnBtm - itemContainerTop >= settingsModalHeight) {
+      settingsModal.style.top = "-100px";
+      settingsModal.style.right = "40px";
+      return;
+    }
+
+    // Case 3: There is not enough space for modal to stretch up/down
+    //         Stretch Item Container Height and stretch down the modal
+    const settingsModalBtm = settingsBtnBtm + settingsModalHeight;
+    const newItemContainerHeight =
+      settingsModalBtm - itemContainerTop + config.OVERFLOW_BUFFER;
+    this._itemContainer.style.height = `${newItemContainerHeight}px`;
+    settingsModal.style.top = "30px";
+    settingsModal.style.right = "0px";
+  }
 
   _setChangingElements() {
     this._currDir = this._parentElement.querySelector(".currDir");
