@@ -1,4 +1,6 @@
-import images from "../../img/*.svg";
+import bing from "../../img/bing.svg";
+import duckduckgo from "../../img/duckduckgo.svg";
+import google from "../../img/google.svg";
 import View from "./View";
 
 class HeaderSearchView extends View {
@@ -129,7 +131,7 @@ class HeaderSearchView extends View {
       <div class="header-search-right">
         <div class="search-engine">
           <img
-            src=${images["google"]}
+            src=${google}
             alt="google-icon"
             height="15"
             width="15"
@@ -141,7 +143,7 @@ class HeaderSearchView extends View {
           <header>SEARCH WITH</header>
           <ul>
             <img
-              src=${images["google"]}
+              src=${google}
               alt="google-icon"
               height="15"
               width="15"
@@ -151,7 +153,7 @@ class HeaderSearchView extends View {
           </ul>
           <ul>
             <img
-              src=${images["bing"]}
+              src=${bing}
               alt="bing-icon"
               height="15"
               width="15"
@@ -161,7 +163,7 @@ class HeaderSearchView extends View {
           </ul>
           <ul>
             <img
-              src=${images["duckduckgo"]}
+              src=${duckduckgo}
               alt="duckduckgo-icon"
               height="15"
               width="15"

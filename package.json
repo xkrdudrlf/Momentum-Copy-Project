@@ -2,7 +2,7 @@
   "name": "momentum",
   "version": "1.0.0",
   "description": "Momentum copy project",
-  "main": "index.js",
+  "default": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel index.html",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/xkrdudrlf/Momentum-Copy-Project#readme",
   "devDependencies": {
     "cssnano": "^5.0.8",
+    "parcel": "^2.0.0-nightly.903",
     "postcss": "^8.3.11",
     "sass": "^1.43.2"
   },
