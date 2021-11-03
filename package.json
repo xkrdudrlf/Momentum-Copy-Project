@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/xkrdudrlf/Momentum-Copy-Project#readme",
   "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.0",
     "cssnano": "^5.0.8",
+    "parcel": "^2.0.0",
     "postcss": "^8.3.11",
     "sass": "^1.43.2"
   },
