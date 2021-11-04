@@ -352,6 +352,7 @@ class HeaderWeatherView extends View {
                   >
                   <div>
                     <span>${this._data.weather.weekly[i].maxTemp}°</span>
+                    /
                     <span>${this._data.weather.weekly[i].minTemp}°</span>
                   </div>
                 </div>

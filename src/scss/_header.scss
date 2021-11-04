@@ -133,8 +133,7 @@
   }
   .weather-box-weekly {
     &-dropdown {
-      @include modal(top, right, 85px, 15px, 245px, 440px);
-
+      @include modal(top, right, 85px, 15px, 265px, 440px);
       &::before {
         @include arrow-up(right, top, 20px, -10px);
       }
@@ -289,8 +288,9 @@
           flex-direction: column;
           justify-content: space-between;
           align-items: center;
+          margin: 8px 4px;
           padding: 6px 0;
-          font-size: 0.9rem;
+          font-size: 0.7rem;
           border-radius: 5px;
           &:hover {
             background-color: rgba(156, 155, 155, 0.15);
