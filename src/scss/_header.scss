@@ -133,7 +133,7 @@
   }
   .weather-box-weekly {
     &-dropdown {
-      @include modal(top, right, 75px, 15px, 245px, 440px);
+      @include modal(top, right, 85px, 15px, 245px, 440px);
 
       &::before {
         @include arrow-up(right, top, 20px, -10px);

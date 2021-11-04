@@ -46,7 +46,7 @@ const controlSearchEngineDropdownSelection = function () {
 
 // 4. Header Search Form
 const controlSearchForm = function (searchURL) {
-  window.location.replace(searchURL);
+  window.location.href = searchURL;
 };
 
 export const init = function () {
