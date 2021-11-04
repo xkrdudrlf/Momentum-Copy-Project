@@ -2,8 +2,9 @@ import * as config from "../config";
 import { getDateWithOffset } from "../utility";
 import "regenerator-runtime/runtime";
 
-export const state = {
-  cityName: "Busan",
+export let state = {
+  time: 0,
+  cityName: "Not Found",
   coords: {
     latitude: 0,
     longitude: 0,
@@ -13,14 +14,14 @@ export const state = {
     current: {
       day: "MON",
       description: "Sunny",
-      temp: 22,
+      temp: 0,
       icon: "01d",
     },
     weekly: [
       {
         day: "Mon",
-        maxTemp: 22,
-        minTemp: 17,
+        maxTemp: 0,
+        minTemp: 0,
         icon: "01d",
         description: "Sunny",
       },
@@ -96,6 +97,13 @@ export const getWeatherData = async function (
 
     state.weather.weekly.push(dayWeatherData);
   });
+
+  // Record the current time
+  // Store the currLocation weather to localStorage for optimization.
+  if (!latitude && !longitude && !location) {
+    state.time = data.current.dt * 1000;
+    localStorage.setItem("weather", JSON.stringify(state));
+  }
 };
 
 const convertCelToFar = function (temp) {
@@ -142,4 +150,18 @@ export const getSearchResult = async function (keyword) {
 
     state.locationSearchResult.push(searchResultobj);
   });
+};
+
+export const currWeatherCache = function (
+  interval = config.WEATHER_CACHE_INTERVAL
+) {
+  const weatherState = JSON.parse(localStorage.getItem("weather"));
+  if (!weatherState) return false;
+
+  const currTime = new Date().getTime();
+  if ((currTime - weatherState.time) / (60 * 1000) < interval) {
+    state = weatherState;
+    return true;
+  }
+  return false;
 };

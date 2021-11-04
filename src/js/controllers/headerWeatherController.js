@@ -3,7 +3,9 @@ import headerWeatherView from "../views/headerWeatherView";
 
 const controlHeaderWeather = async function () {
   try {
-    await model.getWeatherData();
+    if (!model.currWeatherCache()) {
+      await model.getWeatherData();
+    }
     headerWeatherView.render(model.state);
   } catch (err) {
     console.error(err);

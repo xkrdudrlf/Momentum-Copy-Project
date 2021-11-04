@@ -34,3 +34,4 @@ export const RANDOM_QUOTE_API_ADDR =
 
 // Prevents an element from having an overflow scroll getting too close
 export const OVERFLOW_BUFFER = 10;
+export const WEATHER_CACHE_INTERVAL = 10; // in minutes.
