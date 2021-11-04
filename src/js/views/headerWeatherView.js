@@ -199,7 +199,7 @@ class HeaderWeatherView extends View {
       const weatherOptionContainer = this._parentElement.querySelector(
         ".weekly-weather-option-container"
       );
-      if (e.target.classList.contains("edit-location")) {
+      if (e.target.closest(".edit-location")) {
         locationSearchModal.style.display = "flex";
         weatherOptionContainer.style.display = "none";
         return;

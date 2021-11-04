@@ -237,6 +237,9 @@
         .weekly-weather-option {
           &-container {
             @include submodal(column, 30px);
+            .edit-location {
+              cursor: pointer;
+            }
           }
           &-item {
             @include submodal-item();

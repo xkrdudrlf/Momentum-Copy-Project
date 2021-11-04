@@ -30,21 +30,48 @@ export let state = {
   locationSearchResult: [],
 };
 
-const getCurrentLocation = function () {
+const getCurrCoords = function () {
+  return new Promise(function (resolve, reject) {
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    };
+
+    function error() {
+      reject(`Cannot get the current geolcation coordinates.`);
+    }
+
+    function success(pos) {
+      resolve(pos.coords);
+    }
+
+    navigator.geolocation.getCurrentPosition(success, error, options);
+  }).catch((err) => {
+    throw new Error(err.message);
+  });
+};
+
+export const getCurrentLocation = function () {
   const errorMessage = `Cannot get the current geolocation information from ${config.GEOLOCATION_ADDR}`;
 
   return new Promise(async function (resolve, reject) {
     try {
-      const res = await fetch(config.GEOLOCATION_ADDR);
+      const { latitude, longitude } = await getCurrCoords();
+
+      const res = await fetch(
+        `${config.MAPBOX_ADDR}/${longitude},${latitude}.json?access_token=${config.MAPBOX_API_KEY}`
+      );
 
       if (!res.ok) {
         return reject(new Error(errorMessage));
       }
 
       const data = await res.json();
-      state.cityName = data["city"];
-      state.coords.latitude = data["latitude"];
-      state.coords.longitude = data["longitude"];
+
+      state.cityName = data.features[4].place_name.split(",")[0];
+      state.coords.latitude = latitude;
+      state.coords.longitude = longitude;
 
       resolve();
     } catch (err) {

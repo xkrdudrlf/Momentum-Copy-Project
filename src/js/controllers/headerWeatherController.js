@@ -6,6 +6,7 @@ const controlHeaderWeather = async function () {
     if (!model.currWeatherCache()) {
       await model.getWeatherData();
     }
+    model.getCurrentLocation();
     headerWeatherView.render(model.state);
   } catch (err) {
     console.error(err);
