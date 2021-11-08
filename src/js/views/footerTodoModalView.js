@@ -136,12 +136,10 @@ class FooterTodoModalView extends View {
     this._parentElement.addEventListener("click", (e) => {
       if (e.target.classList.contains("edit")) {
         const todoContentItem = e.target.closest(".todo-content-item");
-        const settingsModalOverlay = todoContentItem.querySelector(".todo-item-settings-modal-overlay");
         const [todoSpan, todoEditInput] = todoContentItem.querySelector("form").children;
         e.target.parentElement.style.display = "none";
-        settingsModalOverlay.style.display = "none";
 
-        todoSpan.style.visibility = "hidden";
+        todoSpan.style.display = "none";
         todoEditInput.style.visibility = "visible";
         todoEditInput.disabled = false;
         todoEditInput.focus();
@@ -157,7 +155,8 @@ class FooterTodoModalView extends View {
 
         const todoSpan = todoEditInput.previousElementSibling;
         todoSpan.textContent = todoEditInput.value;
-        todoSpan.style.visibility = "visible";
+        todoSpan.style.display = "none";
+
 
         const updatedItem = {
           checked: this._getCurrCategory()[e.target.dataset.id].checked,
@@ -179,7 +178,8 @@ class FooterTodoModalView extends View {
 
         const todoSpan = todoEditInput.previousElementSibling;
         todoSpan.textContent = todoEditInput.value;
-        todoSpan.style.visibility = "visible";
+        todoSpan.style.display = "block";
+
 
         const updatedItem = {
           checked: this._getCurrCategory()[todoEditInput.dataset.id].checked,
@@ -250,12 +250,10 @@ class FooterTodoModalView extends View {
 
   _addHandlerClickOutsideCloseModal() {
     window.addEventListener("click", (e) => {
-      if (this._openSettingsModal && this._openSettingsModalOverlay) {
+      if (this._openSettingsModal) {
         if (!e.target.closest(".todo-content-item-right")) {
           this._openSettingsModal.style.display = "none";
-          this._openSettingsModalOverlay.style.display = "none";
           this._openSettingsModal = null;
-          this._openSettingsModalOverlay = null;
         }
       }
 
