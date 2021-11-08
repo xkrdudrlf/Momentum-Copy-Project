@@ -84,7 +84,8 @@ export const getQuote = async function () {
     while (true) {
       res = await fetch(`${config.RANDOM_QUOTE_API_ADDR}`, header);
       data = await res.json();
-      if (data.content.length <= 100) break;
+      // Limit the length of Quote
+      if (data.content.length <= 200) break;
     }
     state.quote.content = data.content;
     state.quote.writer = data.originator.name;

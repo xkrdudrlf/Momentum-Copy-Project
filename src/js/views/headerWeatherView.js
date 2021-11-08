@@ -147,12 +147,30 @@ class HeaderWeatherView extends View {
         // Edge Case 2
         if (e.target.classList.contains("location-search-result")) return;
 
+        // 1. Hide the WeatherBox Dropdown if open
         const weatherBoxWeeklyDropdown = this._parentElement.querySelector(
           ".weather-box-weekly-dropdown"
         );
         if (getComputedStyle(weatherBoxWeeklyDropdown).display !== "flex")
           return;
+
         weatherBoxWeeklyDropdown.style.display = "none";
+
+        // 2. Hide the Weather Option if open
+        const weatherOptionContainer = this._parentElement.querySelector(
+          ".weekly-weather-option-container"
+        );
+        if (getComputedStyle(weatherOptionContainer).display === "flex") {
+          weatherOptionContainer.style.display = "none";
+        }
+
+        // 3. Hide the locationSearch Modal if open
+        const locationSearchModal = this._parentElement.querySelector(
+          ".location-search-modal"
+        );
+        if (getComputedStyle(locationSearchModal).display === "flex") {
+          locationSearchModal.style.display = "none";
+        }
       }
     });
   }

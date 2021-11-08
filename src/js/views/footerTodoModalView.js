@@ -143,6 +143,8 @@ class FooterTodoModalView extends View {
         todoEditInput.style.visibility = "visible";
         todoEditInput.disabled = false;
         todoEditInput.focus();
+        
+        this._itemContainer.style.height = "auto";
       }
     });
 
@@ -155,7 +157,7 @@ class FooterTodoModalView extends View {
 
         const todoSpan = todoEditInput.previousElementSibling;
         todoSpan.textContent = todoEditInput.value;
-        todoSpan.style.display = "none";
+        todoSpan.style.display = "block";
 
 
         const updatedItem = {
@@ -165,6 +167,8 @@ class FooterTodoModalView extends View {
         };
 
         handler(updatedItem);
+
+        this._itemContainer.style.height = "auto";
       }
     });
 
@@ -254,6 +258,7 @@ class FooterTodoModalView extends View {
         if (!e.target.closest(".todo-content-item-right")) {
           this._openSettingsModal.style.display = "none";
           this._openSettingsModal = null;
+          this._itemContainer.style.height = "auto";
         }
       }
 
