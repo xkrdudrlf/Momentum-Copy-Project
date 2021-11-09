@@ -214,12 +214,16 @@ class HeaderWeatherView extends View {
       const locationSearchModal = this._parentElement.querySelector(
         ".location-search-modal"
       );
+      const locationSearchInput = this._parentElement.querySelector(
+        ".location-search-input"
+      );
       const weatherOptionContainer = this._parentElement.querySelector(
         ".weekly-weather-option-container"
       );
       if (e.target.closest(".edit-location")) {
         locationSearchModal.style.display = "flex";
         weatherOptionContainer.style.display = "none";
+        locationSearchInput.select();
         return;
       }
 
